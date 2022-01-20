@@ -1,0 +1,32 @@
+import { Injectable } from '@nestjs/common';
+import { customAlphabet } from 'nanoid';
+import { PrismaService } from 'src/common/services/prisma.service';
+
+@Injectable()
+export class AdminService {
+  constructor(private db: PrismaService) {}
+
+  async createRegisterCodes(count = 1) {
+    const generateCode = customAlphabet(
+      'abcdefghijklmnopqrstuvwxyz1234567890',
+      32,
+    );
+    if (count === 1) {
+      const code = generateCode();
+      return await this.db.registerCode.create({
+        data: { code },
+        select: { code: true },
+      });
+    } else {
+      const codes: string[] = [];
+      for (let i = 0; i < count; i++) {
+        const code = generateCode();
+        codes.push(code);
+        await this.db.registerCode.create({
+          data: { code },
+        });
+      }
+      return { codes };
+    }
+  }
+}
