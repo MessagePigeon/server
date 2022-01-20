@@ -22,6 +22,7 @@ specifiers:
   eslint-plugin-prettier: ^4.0.0
   express: ^4.17.2
   jest: ^27.2.5
+  nanoid: ^3.2.0
   prettier: ^2.3.2
   prisma: ^3.8.1
   reflect-metadata: ^0.1.13
@@ -46,6 +47,7 @@ dependencies:
   class-transformer: 0.5.1
   class-validator: 0.13.2
   express: 4.17.2
+  nanoid: 3.2.0
   reflect-metadata: 0.1.13
   rimraf: 3.0.2
   rxjs: 7.5.2
@@ -4084,6 +4086,12 @@ packages:
   /mute-stream/0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
     dev: true
+
+  /nanoid/3.2.0:
+    resolution: {integrity: sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+    dev: false
 
   /natural-compare/1.4.0:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}
