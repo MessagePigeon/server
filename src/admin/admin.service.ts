@@ -32,19 +32,11 @@ export class AdminService {
   }
 
   async findRegisterCode(skip: number, take: number, used?: boolean) {
-    if (used === undefined) {
-      return await this.db.registerCode.findMany({
-        select: { id: true, code: true, used: true },
-        skip,
-        take,
-      });
-    } else {
-      return await this.db.registerCode.findMany({
-        where: { used },
-        select: { id: true, code: true },
-        skip,
-        take,
-      });
-    }
+    return await this.db.registerCode.findMany({
+      select: { id: true, code: true, used: used === undefined },
+      where: used === undefined ? undefined : { used },
+      skip,
+      take,
+    });
   }
 }
