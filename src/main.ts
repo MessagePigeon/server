@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { PrismaService } from '~/services/prisma.service';
 import { AppModule } from './app.module';
-import { PrismaService } from './common/services/prisma.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
