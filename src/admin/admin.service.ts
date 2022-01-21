@@ -11,6 +11,7 @@ export class AdminService {
       'abcdefghijklmnopqrstuvwxyz1234567890',
       32,
     );
+
     if (count === 1) {
       const code = generateCode();
       return await this.db.registerCode.create({
@@ -18,16 +19,25 @@ export class AdminService {
         select: { id: true, code: true },
       });
     } else {
-      const codes: { code: string; id: number }[] = [];
-      for (let i = 0; i < count; i++) {
-        const code = generateCode();
-        const codeData = await this.db.registerCode.create({
-          data: { code },
-          select: { id: true, code: true },
-        });
-        codes.push(codeData);
-      }
-      return codes;
+      const largestIdData = await this.db.registerCode.findFirst({
+        select: { id: true },
+        orderBy: {
+          id: 'desc',
+        },
+      });
+      const largestId = largestIdData === null ? 0 : largestIdData.id;
+
+      const codes = new Array(count)
+        .fill(null)
+        .map(() => ({ code: generateCode() }));
+      await this.db.registerCode.createMany({
+        data: codes,
+      });
+
+      return codes.map(({ code }, index) => ({
+        id: largestId + 1 + index,
+        code,
+      }));
     }
   }
 
