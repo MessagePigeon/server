@@ -15,18 +15,19 @@ export class AdminService {
       const code = generateCode();
       return await this.db.registerCode.create({
         data: { code },
-        select: { code: true },
+        select: { id: true, code: true },
       });
     } else {
-      const codes: string[] = [];
+      const codes: { code: string; id: number }[] = [];
       for (let i = 0; i < count; i++) {
         const code = generateCode();
-        codes.push(code);
-        await this.db.registerCode.create({
+        const codeData = await this.db.registerCode.create({
           data: { code },
+          select: { id: true, code: true },
         });
+        codes.push(codeData);
       }
-      return { codes };
+      return codes;
     }
   }
 }
