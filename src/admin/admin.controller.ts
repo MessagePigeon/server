@@ -19,7 +19,7 @@ export class AdminController {
   @Patch('register-codes')
   @ApiOperation({ summary: 'Generate teacher register codes' })
   async createRegisterCodes(
-    @Body() createRegisterCodesDto: CreateRegisterCodesDto,
+    @Body(new ValidationPipe()) createRegisterCodesDto: CreateRegisterCodesDto,
   ) {
     return await this.adminService.createRegisterCodes(
       createRegisterCodesDto.count,
