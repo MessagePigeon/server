@@ -1,15 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString, Length } from 'class-validator';
 
 export class RegisterTeacherDto {
   @ApiProperty()
-  readonly username: string;
+  @IsString()
+  username: string;
 
   @ApiProperty()
-  readonly password: string;
+  @IsString()
+  password: string;
 
   @ApiProperty()
-  readonly fullName: string;
+  @IsString()
+  fullName: string;
 
   @ApiProperty()
-  readonly registerCode: string;
+  @IsString()
+  @Length(32, 32)
+  registerCode: string;
 }

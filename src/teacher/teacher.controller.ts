@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
@@ -16,7 +17,9 @@ export class TeacherController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register teacher' })
-  async registerTeacher(@Body() registerTeacherDto: RegisterTeacherDto) {
+  async registerTeacher(
+    @Body(new ValidationPipe()) registerTeacherDto: RegisterTeacherDto,
+  ) {
     const registerCodeStatus = await this.teacherService.checkRegisterCode(
       registerTeacherDto.registerCode,
     );
