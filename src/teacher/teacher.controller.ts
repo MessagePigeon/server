@@ -18,17 +18,14 @@ export class TeacherController {
   @Post('register')
   @ApiOperation({ summary: 'Register teacher' })
   async registerTeacher(
-    @Body(new ValidationPipe()) registerTeacherDto: RegisterTeacherDto,
+    @Body(new ValidationPipe())
+    { registerCode, username, password, fullName }: RegisterTeacherDto,
   ) {
     const registerCodeStatus = await this.teacherService.checkRegisterCode(
-      registerTeacherDto.registerCode,
+      registerCode,
     );
     if (registerCodeStatus) {
-      return await this.teacherService.register(
-        registerTeacherDto.username,
-        registerTeacherDto.password,
-        registerTeacherDto.fullName,
-      );
+      return await this.teacherService.register(username, password, fullName);
     } else {
       return new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }

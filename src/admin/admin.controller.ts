@@ -19,24 +19,22 @@ export class AdminController {
   @Patch('register-codes')
   @ApiOperation({ summary: 'Generate teacher register codes' })
   async createRegisterCodes(
-    @Body(new ValidationPipe()) createRegisterCodesDto: CreateRegisterCodesDto,
+    @Body(new ValidationPipe()) { count }: CreateRegisterCodesDto,
   ) {
-    return await this.adminService.createRegisterCodes(
-      createRegisterCodesDto.count,
-    );
+    return await this.adminService.createRegisterCodes(count);
   }
 
   @Get('register-codes')
   @ApiOperation({ summary: 'Get teacher register codes' })
   async findRegisterCodes(
-    @Query(new ValidationPipe()) findRegisterCodesDto: FindRegisterCodeDto,
+    @Query(new ValidationPipe()) { skip, take, used }: FindRegisterCodeDto,
   ) {
     return await this.adminService.findRegisterCode(
-      +findRegisterCodesDto.skip,
-      +findRegisterCodesDto.take,
-      (findRegisterCodesDto.used as unknown) === undefined
+      +skip,
+      +take,
+      (used as unknown) === undefined
         ? undefined
-        : (findRegisterCodesDto.used as unknown) === 'true',
+        : (used as unknown) === 'true',
     );
   }
 }
