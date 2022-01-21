@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { customAlphabet } from 'nanoid';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '~/services/prisma.service';
 
 @Injectable()
 export class AdminService {

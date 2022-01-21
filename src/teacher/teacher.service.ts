@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/common/services/prisma.service';
-import encodePassword from 'src/common/utils/encodePassword.util';
+import { PrismaService } from '~/services/prisma.service';
+import encodePassword from '~/utils/encodePassword.util';
 
 @Injectable()
 export class TeacherService {
