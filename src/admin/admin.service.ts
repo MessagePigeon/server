@@ -42,11 +42,13 @@ export class AdminService {
   }
 
   async findRegisterCode(skip: number, take: number, used?: boolean) {
-    return await this.db.registerCode.findMany({
+    const data = await this.db.registerCode.findMany({
       select: { id: true, code: true, used: used === undefined },
       where: used === undefined ? undefined : { used },
       skip,
       take,
     });
+    const total = await this.db.registerCode.count();
+    return { data, total };
   }
 }
