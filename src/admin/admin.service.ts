@@ -6,7 +6,7 @@ import { PrismaService } from 'src/common/services/prisma.service';
 export class AdminService {
   constructor(private db: PrismaService) {}
 
-  async createRegisterCodes(count = 1) {
+  async createRegisterCodes(count: number) {
     const generateCode = customAlphabet(
       'abcdefghijklmnopqrstuvwxyz1234567890',
       32,
