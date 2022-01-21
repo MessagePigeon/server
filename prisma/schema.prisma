@@ -9,7 +9,7 @@ datasource db {
 
 model RegisterCode {
   id   Int     @id @default(autoincrement())
-  code String
+  code String  @unique
   used Boolean @default(false)
 }
 
