@@ -27,7 +27,7 @@ export class TeacherController {
     if (registerCodeStatus) {
       return await this.teacherService.register(username, password, fullName);
     } else {
-      return new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
   }
 }
