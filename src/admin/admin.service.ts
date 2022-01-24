@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { customAlphabet } from 'nanoid';
 import { PrismaService } from '~/services/prisma.service';
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(
+    private readonly db: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async createRegisterCodes(count: number) {
     const generateCode = customAlphabet(
@@ -50,5 +54,11 @@ export class AdminService {
     });
     const total = await this.db.registerCode.count();
     return { data, total };
+  }
+
+  checkPassword(password: string) {
+    const isPasswordValid =
+      password === this.configService.get<string>('ADMIN_PASSWORD');
+    return isPasswordValid;
   }
 }
