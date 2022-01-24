@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~~/services/prisma.service';
 import {
-  decodeHashPassword,
-  encodeHashPassword,
-} from '~~/utils/hashPassword.util';
+  verifyHashPassword,
+  signHashPassword,
+} from '~/common/utils/hash-password.util';
 
 @Injectable()
 export class TeacherService {
@@ -39,7 +39,7 @@ export class TeacherService {
     return await this.db.teacher.create({
       data: {
         username,
-        password: await encodeHashPassword(password),
+        password: await signHashPassword(password),
         fullName,
       },
       select: { username: true, fullName: true },
@@ -50,7 +50,7 @@ export class TeacherService {
     const { password: passwordHash } = await this.db.teacher.findUnique({
       where: { username },
     });
-    return await decodeHashPassword(passwordHash, password);
+    return await verifyHashPassword(passwordHash, password);
   }
 
   async getId(username: string) {
