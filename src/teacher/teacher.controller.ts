@@ -1,4 +1,11 @@
-import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { TeacherService } from './teacher.service';
@@ -14,6 +21,26 @@ export class TeacherController {
     @Body(new ValidationPipe())
     { registerCode, username, password, fullName }: RegisterTeacherDto,
   ) {
-    this.teacherService.register(registerCode, username, password, fullName);
+    const isRegisterCodeStatusValid =
+      await this.teacherService.checkRegisterCodeValid(registerCode);
+    if (isRegisterCodeStatusValid) {
+      const isUsernameRepeated =
+        await this.teacherService.checkUserNameRepeated(username);
+      if (!isUsernameRepeated) {
+        await this.teacherService.updateRegisterCode(registerCode);
+        return await this.teacherService.createTeacher(
+          username,
+          password,
+          fullName,
+        );
+      } else {
+        throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
+      }
+    } else {
+      throw new HttpException(
+        'Register Code Not Valid',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
   }
 }

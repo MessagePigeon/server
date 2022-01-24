@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/services/prisma.service';
 import encodePassword from '~/utils/encodePassword.util';
 
@@ -6,7 +6,7 @@ import encodePassword from '~/utils/encodePassword.util';
 export class TeacherService {
   constructor(private readonly db: PrismaService) {}
 
-  private async checkRegisterCode(registerCode: string) {
+  async checkRegisterCodeValid(registerCode: string) {
     const isRegisterCodeValidData = await this.db.registerCode.findFirst({
       where: { code: registerCode },
       select: { used: true },
@@ -14,39 +14,28 @@ export class TeacherService {
     const isRegisterCodeStatusValid = isRegisterCodeValidData
       ? !isRegisterCodeValidData.used
       : false;
-    if (isRegisterCodeStatusValid) {
-      await this.db.registerCode.update({
-        where: { code: registerCode },
-        data: { used: true },
-      });
-    }
     return isRegisterCodeStatusValid;
   }
 
-  private async createTeacher(
-    username: string,
-    password: string,
-    fullName: string,
-  ) {
+  async checkUserNameRepeated(username: string) {
+    const isUsernameRepeatedData = await this.db.teacher.findUnique({
+      where: { username },
+    });
+    const isUsernameRepeated = isUsernameRepeatedData !== null;
+    return isUsernameRepeated;
+  }
+
+  async updateRegisterCode(registerCode: string) {
+    return await this.db.registerCode.update({
+      where: { code: registerCode },
+      data: { used: true },
+    });
+  }
+
+  async createTeacher(username: string, password: string, fullName: string) {
     return await this.db.teacher.create({
       data: { username, password: encodePassword(password), fullName },
       select: { username: true, fullName: true },
     });
-  }
-
-  async register(
-    registerCode: string,
-    username: string,
-    password: string,
-    fullName: string,
-  ) {
-    const isRegisterCodeStatusValid = await this.checkRegisterCode(
-      registerCode,
-    );
-    if (isRegisterCodeStatusValid) {
-      return await this.createTeacher(username, password, fullName);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
   }
 }
