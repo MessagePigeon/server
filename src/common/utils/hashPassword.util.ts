@@ -1,5 +1,9 @@
-import { hash } from 'argon2';
+import { hash, verify } from 'argon2';
 
-export default async function hashPassword(password: string) {
+export async function encodeHashPassword(password: string) {
   return await hash(password);
+}
+
+export async function decodeHashPassword(hash: string, password: string) {
+  return await verify(hash, password);
 }
