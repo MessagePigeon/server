@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { customAlphabet } from 'nanoid';
+import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { PrismaService } from '~~/services/prisma.service';
 
 @Injectable()
@@ -11,13 +11,8 @@ export class AdminService {
   ) {}
 
   async createRegisterCodes(count: number) {
-    const generateCode = customAlphabet(
-      'abcdefghijklmnopqrstuvwxyz1234567890',
-      32,
-    );
-
     if (count === 1) {
-      const code = generateCode();
+      const code = generateRandomString(32);
       return await this.db.registerCode.create({
         data: { code },
         select: { id: true, code: true },
@@ -33,7 +28,7 @@ export class AdminService {
 
       const codes = new Array(count)
         .fill(null)
-        .map(() => ({ code: generateCode() }));
+        .map(() => ({ code: generateRandomString(32) }));
       await this.db.registerCode.createMany({
         data: codes,
       });
