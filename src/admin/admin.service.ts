@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
+import { signHashPassword } from '~/common/utils/hash-password.util';
 import { PrismaService } from '~~/services/prisma.service';
 
 @Injectable()
@@ -55,5 +56,14 @@ export class AdminService {
     const isPasswordValid =
       password === this.configService.get<string>('ADMIN_PASSWORD');
     return isPasswordValid;
+  }
+
+  async generateTeacher(username: string, fullName: string) {
+    const password = generateRandomString(8);
+    const { id } = await this.db.teacher.create({
+      data: { username, password: await signHashPassword(password), fullName },
+      select: { id: true },
+    });
+    return { id, username, password, fullName };
   }
 }

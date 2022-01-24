@@ -13,9 +13,11 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
+import { TeacherService } from '~/teacher/teacher.service';
 import { AdminAuthGuard } from '~~/guards/admin-auth.guard';
 import { AdminService } from './admin.service';
 import { CreateRegisterCodesDto } from './dto/create-register-codes.dto';
+import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
 import { AdminAuthGuardRequest } from './types/admin-auth-guard-request.type';
@@ -26,6 +28,7 @@ export class AdminController {
   constructor(
     private readonly adminService: AdminService,
     private readonly authService: AuthService,
+    private readonly teacherService: TeacherService,
   ) {}
 
   @Post('login')
@@ -68,5 +71,21 @@ export class AdminController {
   @ApiOperation({ summary: 'Init with jwt header' })
   init(@Req() { user }: AdminAuthGuardRequest) {
     return user;
+  }
+
+  @Post('teacher')
+  @UseGuards(AdminAuthGuard)
+  @ApiOperation({ summary: 'Generate teacher with random password' })
+  async createTeacher(
+    @Body(new ValidationPipe()) { username, fullName }: CreateTeacherDto,
+  ) {
+    const isUsernameRepeated = await this.teacherService.checkUsernameExist(
+      username,
+    );
+    if (!isUsernameRepeated) {
+      return await this.adminService.generateTeacher(username, fullName);
+    } else {
+      throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
+    }
   }
 }
