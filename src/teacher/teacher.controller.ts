@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpException,
-  HttpStatus,
-  Post,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { TeacherService } from './teacher.service';
@@ -21,13 +14,6 @@ export class TeacherController {
     @Body(new ValidationPipe())
     { registerCode, username, password, fullName }: RegisterTeacherDto,
   ) {
-    const registerCodeStatus = await this.teacherService.checkRegisterCode(
-      registerCode,
-    );
-    if (registerCodeStatus) {
-      return await this.teacherService.register(username, password, fullName);
-    } else {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
+    this.teacherService.register(registerCode, username, password, fullName);
   }
 }

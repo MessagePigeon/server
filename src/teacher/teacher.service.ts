@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '~/services/prisma.service';
 import encodePassword from '~/utils/encodePassword.util';
 
@@ -6,27 +6,47 @@ import encodePassword from '~/utils/encodePassword.util';
 export class TeacherService {
   constructor(private db: PrismaService) {}
 
-  async checkRegisterCode(registerCode: string) {
-    const registerCodeStatusData = await this.db.registerCode.findFirst({
+  private async checkRegisterCode(registerCode: string) {
+    const isRegisterCodeValidData = await this.db.registerCode.findFirst({
       where: { code: registerCode },
       select: { used: true },
     });
-    const registerCodeStatus = registerCodeStatusData
-      ? !registerCodeStatusData.used
+    const isRegisterCodeStatusValid = isRegisterCodeValidData
+      ? !isRegisterCodeValidData.used
       : false;
-    if (registerCodeStatus) {
+    if (isRegisterCodeStatusValid) {
       await this.db.registerCode.update({
         where: { code: registerCode },
         data: { used: true },
       });
     }
-    return registerCodeStatus;
+    return isRegisterCodeStatusValid;
   }
 
-  async register(username: string, password: string, fullName: string) {
+  private async createTeacher(
+    username: string,
+    password: string,
+    fullName: string,
+  ) {
     return await this.db.teacher.create({
       data: { username, password: encodePassword(password), fullName },
       select: { username: true, fullName: true },
     });
+  }
+
+  async register(
+    registerCode: string,
+    username: string,
+    password: string,
+    fullName: string,
+  ) {
+    const isRegisterCodeStatusValid = await this.checkRegisterCode(
+      registerCode,
+    );
+    if (isRegisterCodeStatusValid) {
+      return await this.createTeacher(username, password, fullName);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
   }
 }
