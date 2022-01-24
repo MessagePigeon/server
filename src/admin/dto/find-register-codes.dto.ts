@@ -1,12 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBooleanString, IsNumberString, IsOptional } from 'class-validator';
+import {
+  IsBooleanString,
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+} from 'class-validator';
 
 export class FindRegisterCodeDto {
   @ApiProperty()
+  @IsNotEmpty()
   @IsNumberString()
   skip: number;
 
   @ApiProperty()
+  @IsNotEmpty()
   @IsNumberString()
   take: number;
 
