@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { customAlphabet } from 'nanoid';
-import { PrismaService } from '~/services/prisma.service';
+import { PrismaService } from '~~/services/prisma.service';
 
 @Injectable()
 export class AdminService {

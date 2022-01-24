@@ -10,8 +10,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthService } from 'src/auth/auth.service';
-import { TeacherAuthGuard } from '~/guards/teacher-auth.guard';
+import { AuthService } from '~/auth/auth.service';
+import { TeacherAuthGuard } from '~~/guards/teacher-auth.guard';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { TeacherService } from './teacher.service';

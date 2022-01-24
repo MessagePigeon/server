@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { PrismaService } from '~/services/prisma.service';
+import { PrismaService } from '~~/services/prisma.service';
 import { AdminStrategy } from './admin.strategy';
 import { AuthService } from './auth.service';
 import { TeacherStrategy } from './teacher.strategy';

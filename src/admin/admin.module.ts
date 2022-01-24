@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from 'src/auth/auth.module';
-import { PrismaService } from '~/services/prisma.service';
+import { AuthModule } from '~/auth/auth.module';
+import { PrismaService } from '~~/services/prisma.service';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 

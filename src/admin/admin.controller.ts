@@ -12,8 +12,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthService } from 'src/auth/auth.service';
-import { AdminAuthGuard } from '~/guards/admin-auth.guard';
+import { AuthService } from '~/auth/auth.service';
+import { AdminAuthGuard } from '~~/guards/admin-auth.guard';
 import { AdminService } from './admin.service';
 import { CreateRegisterCodesDto } from './dto/create-register-codes.dto';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';

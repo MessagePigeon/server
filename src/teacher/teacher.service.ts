@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '~/services/prisma.service';
+import { PrismaService } from '~~/services/prisma.service';
 import {
   decodeHashPassword,
   encodeHashPassword,
-} from '~/utils/hashPassword.util';
+} from '~~/utils/hashPassword.util';
 
 @Injectable()
 export class TeacherService {
