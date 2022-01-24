@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/services/prisma.service';
-import encodePassword from '~/utils/encodePassword.util';
+import hashPassword from '~/utils/encodePassword.util';
 
 @Injectable()
 export class TeacherService {
@@ -34,7 +34,7 @@ export class TeacherService {
 
   async createTeacher(username: string, password: string, fullName: string) {
     return await this.db.teacher.create({
-      data: { username, password: encodePassword(password), fullName },
+      data: { username, password: await hashPassword(password), fullName },
       select: { username: true, fullName: true },
     });
   }
