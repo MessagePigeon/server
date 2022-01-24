@@ -28,7 +28,19 @@ export class AdminController {
     private readonly authService: AuthService,
   ) {}
 
+  @Post('login')
+  @ApiOperation({})
+  login(@Body(new ValidationPipe()) { password }: LoginAdminDto) {
+    const isPasswordValid = this.adminService.checkPassword(password);
+    if (isPasswordValid) {
+      return this.authService.generateAdminJwt();
+    } else {
+      throw new HttpException('Password Incorrect', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
   @Put('register-codes')
+  @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Generate teacher register codes' })
   async createRegisterCodes(
     @Body(new ValidationPipe()) { count }: CreateRegisterCodesDto,
@@ -37,6 +49,7 @@ export class AdminController {
   }
 
   @Get('register-codes')
+  @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Get teacher register codes' })
   async findRegisterCodes(
     @Query(new ValidationPipe()) { skip, take, used }: FindRegisterCodeDto,
@@ -48,17 +61,6 @@ export class AdminController {
         ? undefined
         : (used as unknown) === 'true',
     );
-  }
-
-  @Post('login')
-  @ApiOperation({})
-  login(@Body(new ValidationPipe()) { password }: LoginAdminDto) {
-    const isPasswordValid = this.adminService.checkPassword(password);
-    if (isPasswordValid) {
-      return this.authService.generateAdminJwt();
-    } else {
-      throw new HttpException('Password Incorrect', HttpStatus.UNAUTHORIZED);
-    }
   }
 
   @Get('init')
