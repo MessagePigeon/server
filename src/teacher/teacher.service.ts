@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/services/prisma.service';
-import { encodeHashPassword } from '~/utils/hashPassword.util';
+import {
+  decodeHashPassword,
+  encodeHashPassword,
+} from '~/utils/hashPassword.util';
 
 @Injectable()
 export class TeacherService {
@@ -17,12 +20,12 @@ export class TeacherService {
     return isRegisterCodeStatusValid;
   }
 
-  async checkUserNameRepeated(username: string) {
-    const isUsernameRepeatedData = await this.db.teacher.findUnique({
+  async checkUsernameExist(username: string) {
+    const isUsernameExistData = await this.db.teacher.findUnique({
       where: { username },
     });
-    const isUsernameRepeated = isUsernameRepeatedData !== null;
-    return isUsernameRepeated;
+    const isUsernameExist = isUsernameExistData !== null;
+    return isUsernameExist;
   }
 
   async updateRegisterCode(registerCode: string) {
@@ -32,7 +35,7 @@ export class TeacherService {
     });
   }
 
-  async createTeacher(username: string, password: string, fullName: string) {
+  async create(username: string, password: string, fullName: string) {
     return await this.db.teacher.create({
       data: {
         username,
@@ -41,5 +44,24 @@ export class TeacherService {
       },
       select: { username: true, fullName: true },
     });
+  }
+
+  async checkPasswordHash(username: string, password: string) {
+    const { password: passwordHash } = await this.db.teacher.findUnique({
+      where: { username },
+    });
+    return await decodeHashPassword(passwordHash, password);
+  }
+
+  async getId(username: string) {
+    const { id } = await this.db.teacher.findUnique({ where: { username } });
+    return id;
+  }
+
+  async init(id: string) {
+    const { password, ...info } = await this.db.teacher.findUnique({
+      where: { id },
+    });
+    return info;
   }
 }
