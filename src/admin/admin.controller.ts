@@ -4,8 +4,8 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Patch,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -28,7 +28,7 @@ export class AdminController {
     private readonly authService: AuthService,
   ) {}
 
-  @Patch('register-codes')
+  @Put('register-codes')
   @ApiOperation({ summary: 'Generate teacher register codes' })
   async createRegisterCodes(
     @Body(new ValidationPipe()) { count }: CreateRegisterCodesDto,
