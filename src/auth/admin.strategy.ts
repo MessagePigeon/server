@@ -16,6 +16,8 @@ export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {
   validate(payload: { message: string }) {
     if (payload.message !== 'pigeon') {
       throw new UnauthorizedException();
+    } else {
+      return { isAdmin: true };
     }
   }
 }
