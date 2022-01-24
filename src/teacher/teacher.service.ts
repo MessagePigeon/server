@@ -4,7 +4,7 @@ import encodePassword from '~/utils/encodePassword.util';
 
 @Injectable()
 export class TeacherService {
-  constructor(private db: PrismaService) {}
+  constructor(private readonly db: PrismaService) {}
 
   private async checkRegisterCode(registerCode: string) {
     const isRegisterCodeValidData = await this.db.registerCode.findFirst({

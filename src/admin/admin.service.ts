@@ -4,7 +4,7 @@ import { PrismaService } from '~/services/prisma.service';
 
 @Injectable()
 export class AdminService {
-  constructor(private db: PrismaService) {}
+  constructor(private readonly db: PrismaService) {}
 
   async createRegisterCodes(count: number) {
     const generateCode = customAlphabet(
