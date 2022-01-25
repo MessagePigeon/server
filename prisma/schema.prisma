@@ -14,8 +14,9 @@ model RegisterCode {
 }
 
 model Teacher {
-  id       String @id @default(uuid())
-  username String @unique
-  fullName String
-  password String
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  username  String   @unique
+  fullName  String
+  password  String
 }
