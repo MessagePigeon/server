@@ -34,8 +34,8 @@ export class AdminService {
         data: codes,
       });
 
-      return codes.map(({ code }, index) => ({
-        id: largestId + 1 + index,
+      return codes.reverse().map(({ code }, index) => ({
+        id: largestId + count - index,
         code,
       }));
     }
@@ -47,6 +47,9 @@ export class AdminService {
       where: used === undefined ? undefined : { used },
       skip,
       take,
+      orderBy: {
+        id: 'desc',
+      },
     });
     const total = await this.db.registerCode.count();
     return { data, total };
