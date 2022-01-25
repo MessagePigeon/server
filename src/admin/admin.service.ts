@@ -69,4 +69,13 @@ export class AdminService {
     });
     return { id, username, password, fullName };
   }
+
+  async findTeachers(skip: number, take: number) {
+    return await this.db.teacher.findMany({
+      select: { id: true, username: true, fullName: true },
+      skip,
+      take,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }

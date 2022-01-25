@@ -17,6 +17,7 @@ import { TeacherService } from '~/teacher/teacher.service';
 import { AdminAuthGuard } from '~~/guards/admin-auth.guard';
 import { AdminService } from './admin.service';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
+import { FindTeachersDto } from './dto/find-teachers.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
 import { GenerateTeacherDto } from './dto/generate-teacher.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
@@ -87,5 +88,13 @@ export class AdminController {
     } else {
       throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
     }
+  }
+
+  @Get('teachers')
+  @UseGuards(AdminAuthGuard)
+  async findTeachers(
+    @Query(new ValidationPipe()) { skip, take }: FindTeachersDto,
+  ) {
+    return await this.adminService.findTeachers(+skip, +take);
   }
 }
