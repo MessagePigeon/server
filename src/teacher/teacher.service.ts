@@ -46,9 +46,12 @@ export class TeacherService {
     });
   }
 
-  async checkPasswordHash(username: string, password: string) {
+  async checkPasswordHash(
+    uniqueField: { username: string } | { id: string },
+    password: string,
+  ) {
     const { password: passwordHash } = await this.db.teacher.findUnique({
-      where: { username },
+      where: uniqueField,
     });
     return await verifyHashPassword(passwordHash, password);
   }
@@ -65,11 +68,20 @@ export class TeacherService {
     return info;
   }
 
-  async modifyRealName(id: string, realName: string) {
+  async modifyRealName(id: string, newRealName: string) {
     return await this.db.teacher.update({
       where: { id },
-      data: { realName },
+      data: { realName: newRealName },
       select: { username: true, realName: true },
     });
+  }
+
+  async modifyPassword(id: string, newPassword: string) {
+    const { username } = await this.db.teacher.update({
+      where: { id },
+      data: { password: await signHashPassword(newPassword) },
+      select: { username: true },
+    });
+    return { username, password: newPassword };
   }
 }

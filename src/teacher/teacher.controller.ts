@@ -14,6 +14,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { TeacherAuthGuard } from '~~/guards/teacher-auth.guard';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
+import { ModifyPasswordDto } from './dto/modify-password.dto';
 import { modifyRealNameDto } from './dto/modify-real-name.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { TeacherService } from './teacher.service';
@@ -61,7 +62,7 @@ export class TeacherController {
     );
     if (isUserNameExist) {
       const isPasswordCorrect = await this.teacherService.checkPasswordHash(
-        username,
+        { username },
         password,
       );
       if (isPasswordCorrect) {
@@ -89,5 +90,22 @@ export class TeacherController {
     @Body(new ValidationPipe()) { newRealName }: modifyRealNameDto,
   ) {
     return await this.teacherService.modifyRealName(req.user.id, newRealName);
+  }
+
+  @Patch('password')
+  @UseGuards(TeacherAuthGuard)
+  async modifyPassword(
+    @Req() req: TeacherAuthGuardRequest,
+    @Body(new ValidationPipe()) { oldPassword, newPassword }: ModifyPasswordDto,
+  ) {
+    const isOldPasswordCorrect = await this.teacherService.checkPasswordHash(
+      { id: req.user.id },
+      oldPassword,
+    );
+    if (isOldPasswordCorrect) {
+      return await this.teacherService.modifyPassword(req.user.id, newPassword);
+    } else {
+      throw new HttpException('Old Password Incorrect', HttpStatus.FORBIDDEN);
+    }
   }
 }
