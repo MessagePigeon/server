@@ -11,7 +11,7 @@ export class AdminService {
     private readonly configService: ConfigService,
   ) {}
 
-  async createRegisterCodes(count: number) {
+  async generateRegisterCodes(count: number) {
     if (count === 1) {
       const code = generateRandomString(32);
       return await this.db.registerCode.create({

@@ -16,9 +16,9 @@ import { AuthService } from '~/auth/auth.service';
 import { TeacherService } from '~/teacher/teacher.service';
 import { AdminAuthGuard } from '~~/guards/admin-auth.guard';
 import { AdminService } from './admin.service';
-import { CreateRegisterCodesDto } from './dto/create-register-codes.dto';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
+import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
+import { GenerateTeacherDto } from './dto/generate-teacher.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
 import { AdminAuthGuardRequest } from './types/admin-auth-guard-request.type';
 
@@ -45,10 +45,10 @@ export class AdminController {
   @Put('register-codes')
   @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Generate teacher register codes' })
-  async createRegisterCodes(
-    @Body(new ValidationPipe()) { count }: CreateRegisterCodesDto,
+  async generateRegisterCodes(
+    @Body(new ValidationPipe()) { count }: GenerateRegisterCodesDto,
   ) {
-    return await this.adminService.createRegisterCodes(count);
+    return await this.adminService.generateRegisterCodes(count);
   }
 
   @Get('register-codes')
@@ -76,8 +76,8 @@ export class AdminController {
   @Post('teacher')
   @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Generate teacher with random password' })
-  async createTeacher(
-    @Body(new ValidationPipe()) { username, fullName }: CreateTeacherDto,
+  async generateTeacher(
+    @Body(new ValidationPipe()) { username, fullName }: GenerateTeacherDto,
   ) {
     const isUsernameRepeated = await this.teacherService.checkUsernameExist(
       username,
