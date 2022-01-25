@@ -64,4 +64,12 @@ export class TeacherService {
     });
     return info;
   }
+
+  async modifyRealName(id: string, realName: string) {
+    return await this.db.teacher.update({
+      where: { id },
+      data: { realName },
+      select: { username: true, realName: true },
+    });
+  }
 }

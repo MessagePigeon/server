@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -13,6 +14,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { TeacherAuthGuard } from '~~/guards/teacher-auth.guard';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
+import { modifyRealNameDto } from './dto/modify-real-name.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { TeacherService } from './teacher.service';
 import { TeacherAuthGuardRequest } from './types/teacher-auth-guard-request.type';
@@ -26,7 +28,6 @@ export class TeacherController {
   ) {}
 
   @Post('register')
-  @ApiOperation({ summary: 'Register teacher' })
   async register(
     @Body(new ValidationPipe())
     { registerCode, username, password, realName }: RegisterTeacherDto,
@@ -52,7 +53,6 @@ export class TeacherController {
   }
 
   @Post('login')
-  @ApiOperation({})
   async login(
     @Body(new ValidationPipe()) { username, password }: LoginTeacherDto,
   ) {
@@ -80,5 +80,14 @@ export class TeacherController {
   @ApiOperation({ summary: 'Init with jwt header' })
   async init(@Req() req: TeacherAuthGuardRequest) {
     return await this.teacherService.init(req.user.id);
+  }
+
+  @Patch('real-name')
+  @UseGuards(TeacherAuthGuard)
+  async modifyRealName(
+    @Req() req: TeacherAuthGuardRequest,
+    @Body(new ValidationPipe()) { newRealName }: modifyRealNameDto,
+  ) {
+    return await this.teacherService.modifyRealName(req.user.id, newRealName);
   }
 }
