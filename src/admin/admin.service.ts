@@ -71,12 +71,14 @@ export class AdminService {
   }
 
   async findTeachers(skip: number, take: number) {
-    return await this.db.teacher.findMany({
+    const data = await this.db.teacher.findMany({
       select: { id: true, username: true, realName: true },
       skip,
       take,
       orderBy: { createdAt: 'desc' },
     });
+    const total = await this.db.teacher.count();
+    return { data, total };
   }
 
   async resetTeacherPassword(id: string) {
