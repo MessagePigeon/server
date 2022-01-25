@@ -17,6 +17,6 @@ model Teacher {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   username  String   @unique
-  fullName  String
+  realName  String
   password  String
 }

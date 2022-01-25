@@ -35,14 +35,14 @@ export class TeacherService {
     });
   }
 
-  async create(username: string, password: string, fullName: string) {
+  async create(username: string, password: string, realName: string) {
     return await this.db.teacher.create({
       data: {
         username,
         password: await signHashPassword(password),
-        fullName,
+        realName,
       },
-      select: { username: true, fullName: true },
+      select: { username: true, realName: true },
     });
   }
 

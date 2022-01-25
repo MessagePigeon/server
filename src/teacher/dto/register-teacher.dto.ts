@@ -15,7 +15,7 @@ export class RegisterTeacherDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  fullName: string;
+  realName: string;
 
   @ApiProperty()
   @IsNotEmpty()

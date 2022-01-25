@@ -10,5 +10,5 @@ export class GenerateTeacherDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  fullName: string;
+  realName: string;
 }

@@ -29,7 +29,7 @@ export class TeacherController {
   @ApiOperation({ summary: 'Register teacher' })
   async register(
     @Body(new ValidationPipe())
-    { registerCode, username, password, fullName }: RegisterTeacherDto,
+    { registerCode, username, password, realName }: RegisterTeacherDto,
   ) {
     const isRegisterCodeStatusValid =
       await this.teacherService.checkRegisterCodeValid(registerCode);
@@ -39,7 +39,7 @@ export class TeacherController {
       );
       if (!isUsernameRepeated) {
         await this.teacherService.updateRegisterCode(registerCode);
-        return await this.teacherService.create(username, password, fullName);
+        return await this.teacherService.create(username, password, realName);
       } else {
         throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
       }

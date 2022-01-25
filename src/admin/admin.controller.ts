@@ -78,13 +78,13 @@ export class AdminController {
   @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Generate teacher with random password' })
   async generateTeacher(
-    @Body(new ValidationPipe()) { username, fullName }: GenerateTeacherDto,
+    @Body(new ValidationPipe()) { username, realName }: GenerateTeacherDto,
   ) {
     const isUsernameRepeated = await this.teacherService.checkUsernameExist(
       username,
     );
     if (!isUsernameRepeated) {
-      return await this.adminService.generateTeacher(username, fullName);
+      return await this.adminService.generateTeacher(username, realName);
     } else {
       throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
     }

@@ -61,18 +61,18 @@ export class AdminService {
     return isPasswordValid;
   }
 
-  async generateTeacher(username: string, fullName: string) {
+  async generateTeacher(username: string, realName: string) {
     const password = generateRandomString(8);
     const { id } = await this.db.teacher.create({
-      data: { username, password: await signHashPassword(password), fullName },
+      data: { username, password: await signHashPassword(password), realName },
       select: { id: true },
     });
-    return { id, username, password, fullName };
+    return { id, username, password, realName };
   }
 
   async findTeachers(skip: number, take: number) {
     return await this.db.teacher.findMany({
-      select: { id: true, username: true, fullName: true },
+      select: { id: true, username: true, realName: true },
       skip,
       take,
       orderBy: { createdAt: 'desc' },
