@@ -23,6 +23,7 @@ import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
 import { GenerateTeacherDto } from './dto/generate-teacher.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
 import { ModifyTeacherRealNameDto } from './dto/modify-teacher-real-name.dto';
+import { ResetTeacherPasswordDto } from './dto/reset-teacher-password.dto';
 import { AdminAuthGuardRequest } from './types/admin-auth-guard-request.type';
 
 @Controller('admin')
@@ -105,5 +106,14 @@ export class AdminController {
     @Body(new ValidationPipe()) { id, newRealName }: ModifyTeacherRealNameDto,
   ) {
     return await this.teacherService.modifyRealName(id, newRealName);
+  }
+
+  @Patch('teacher/password')
+  @UseGuards(AdminAuthGuard)
+  @ApiOperation({ summary: 'Reset teacher password to random string' })
+  async resetTeacherPassword(
+    @Body(new ValidationPipe()) { id }: ResetTeacherPasswordDto,
+  ) {
+    return await this.adminService.resetTeacherPassword(id);
   }
 }

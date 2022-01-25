@@ -78,4 +78,14 @@ export class AdminService {
       orderBy: { createdAt: 'desc' },
     });
   }
+
+  async resetTeacherPassword(id: string) {
+    const newPassword = generateRandomString(8);
+    const { username } = await this.db.teacher.update({
+      where: { id },
+      data: { password: await signHashPassword(newPassword) },
+      select: { username: true },
+    });
+    return { username, newPassword };
+  }
 }
