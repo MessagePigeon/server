@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Patch,
   Post,
   Put,
   Query,
@@ -21,6 +22,7 @@ import { FindTeachersDto } from './dto/find-teachers.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
 import { GenerateTeacherDto } from './dto/generate-teacher.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
+import { ModifyTeacherRealNameDto } from './dto/modify-teacher-real-name.dto';
 import { AdminAuthGuardRequest } from './types/admin-auth-guard-request.type';
 
 @Controller('admin')
@@ -33,7 +35,6 @@ export class AdminController {
   ) {}
 
   @Post('login')
-  @ApiOperation({})
   login(@Body(new ValidationPipe()) { password }: LoginAdminDto) {
     const isPasswordValid = this.adminService.checkPassword(password);
     if (isPasswordValid) {
@@ -96,5 +97,13 @@ export class AdminController {
     @Query(new ValidationPipe()) { skip, take }: FindTeachersDto,
   ) {
     return await this.adminService.findTeachers(+skip, +take);
+  }
+
+  @Patch('teacher/real-name')
+  @UseGuards(AdminAuthGuard)
+  async modifyTeacherRealName(
+    @Body(new ValidationPipe()) { id, newRealName }: ModifyTeacherRealNameDto,
+  ) {
+    return await this.teacherService.modifyRealName(id, newRealName);
   }
 }
