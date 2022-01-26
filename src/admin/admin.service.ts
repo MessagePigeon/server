@@ -101,14 +101,14 @@ export class AdminService {
 
   async generateStudent(key: string, defaultRemark: string) {
     await this.db.student.create({
-      data: { key: await signHashPassword(key), defaultRemark },
+      data: { key, defaultRemark },
     });
     return { key, defaultRemark };
   }
 
   async findStudents(skip: number, take: number) {
     const data = await this.db.student.findMany({
-      select: { id: true, defaultRemark: true },
+      select: { id: true, key: true, defaultRemark: true },
       orderBy: { createdAt: 'desc' },
       skip,
       take,
