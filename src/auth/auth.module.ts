@@ -3,9 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { PrismaService } from '~/common/services/prisma.service';
-import { AdminStrategy } from './admin.strategy';
+import { AdminStrategy } from './strategy/admin.strategy';
 import { AuthService } from './auth.service';
-import { TeacherStrategy } from './teacher.strategy';
+import { StudentStrategy } from './strategy/student.strategy';
+import { TeacherStrategy } from './strategy/teacher.strategy';
 
 @Module({
   imports: [
@@ -16,7 +17,13 @@ import { TeacherStrategy } from './teacher.strategy';
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
     }),
   ],
-  providers: [AuthService, AdminStrategy, TeacherStrategy, PrismaService],
+  providers: [
+    AuthService,
+    PrismaService,
+    AdminStrategy,
+    TeacherStrategy,
+    StudentStrategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}
