@@ -1,22 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBooleanString,
-  IsNotEmpty,
-  IsNumberString,
-  IsOptional,
-} from 'class-validator';
+import { IsBooleanString, IsOptional } from 'class-validator';
+import { PaginationDto } from '~/common/dto/pagination.dto';
 
-export class FindRegisterCodeDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumberString()
-  skip: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumberString()
-  take: number;
-
+export class FindRegisterCodeDto extends PaginationDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsBooleanString()

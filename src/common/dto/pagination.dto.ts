@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString } from 'class-validator';
 
-export class FindTeachersDto {
+export class PaginationDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumberString()

@@ -14,12 +14,12 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
+import { PaginationDto } from '~/common/dto/pagination.dto';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { TeacherService } from '~/teacher/teacher.service';
 import { AdminAuthGuard } from '~~/guards/admin-auth.guard';
 import { AdminService } from './admin.service';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
-import { FindTeachersDto } from './dto/find-teachers.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
 import { GenerateStudentDto } from './dto/generate-student.dto';
 import { GenerateTeacherDto } from './dto/generate-teacher.dto';
@@ -97,7 +97,7 @@ export class AdminController {
   @Get('teachers')
   @UseGuards(AdminAuthGuard)
   async findTeachers(
-    @Query(new ValidationPipe()) { skip, take }: FindTeachersDto,
+    @Query(new ValidationPipe()) { skip, take }: PaginationDto,
   ) {
     return await this.adminService.findTeachers(+skip, +take);
   }
