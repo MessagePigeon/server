@@ -67,7 +67,7 @@ export class TeacherController {
       );
       if (isPasswordCorrect) {
         const id = await this.teacherService.getId(username);
-        return await this.authService.generateTeacherJwt(id);
+        return this.authService.generateTeacherJwt(id);
       } else {
         throw new HttpException('Password Incorrect', HttpStatus.UNAUTHORIZED);
       }
