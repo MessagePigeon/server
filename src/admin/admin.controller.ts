@@ -137,4 +137,12 @@ export class AdminController {
       throw new HttpException('Key Repeated', HttpStatus.FORBIDDEN);
     }
   }
+
+  @Get('students')
+  @UseGuards(AdminAuthGuard)
+  async findStudents(
+    @Query(new ValidationPipe()) { skip, take }: PaginationDto,
+  ) {
+    return await this.adminService.findStudents(+skip, +take);
+  }
 }

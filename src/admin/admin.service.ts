@@ -105,4 +105,15 @@ export class AdminService {
     });
     return { key, defaultRemark };
   }
+
+  async findStudents(skip: number, take: number) {
+    const data = await this.db.student.findMany({
+      select: { id: true, defaultRemark: true },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+    });
+    const total = await this.db.student.count();
+    return { data, total };
+  }
 }
