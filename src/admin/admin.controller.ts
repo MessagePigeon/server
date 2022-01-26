@@ -28,6 +28,7 @@ import { ModifyTeacherRealNameDto } from './dto/modify-teacher-real-name.dto';
 import { ResetTeacherPasswordDto } from './dto/reset-teacher-password.dto';
 import { AdminAuthGuardRequest } from './types/admin-auth-guard-request.type';
 import { StudentService } from '~/student/student.service';
+import { ModifyStudentDto } from './dto/modify-student.dto';
 
 @Controller('admin')
 @ApiTags('admin')
@@ -144,5 +145,13 @@ export class AdminController {
     @Query(new ValidationPipe()) { skip, take }: PaginationDto,
   ) {
     return await this.adminService.findStudents(+skip, +take);
+  }
+
+  @Patch('student')
+  @UseGuards(AdminAuthGuard)
+  async modifyStudent(
+    @Body(new ValidationPipe()) { id, ...data }: ModifyStudentDto,
+  ) {
+    return await this.adminService.modifyStudent(id, data);
   }
 }

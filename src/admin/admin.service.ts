@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { signHashPassword } from '~/common/utils/hash-password.util';
 import { PrismaService } from '~/common/services/prisma.service';
+import { ModifyStudentDto } from './dto/modify-student.dto';
 
 @Injectable()
 export class AdminService {
@@ -107,5 +108,9 @@ export class AdminService {
     });
     const total = await this.db.student.count();
     return { data, total };
+  }
+
+  async modifyStudent(id: string, data: Partial<Omit<ModifyStudentDto, 'id'>>) {
+    return await this.db.student.update({ where: { id }, data });
   }
 }
