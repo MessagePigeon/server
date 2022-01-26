@@ -100,7 +100,9 @@ export class AdminService {
   }
 
   async generateStudent(key: string, defaultRemark: string) {
-    await this.db.student.create({ data: { key, defaultRemark } });
+    await this.db.student.create({
+      data: { key: await signHashPassword(key), defaultRemark },
+    });
     return { key, defaultRemark };
   }
 }
