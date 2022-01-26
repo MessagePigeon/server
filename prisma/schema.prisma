@@ -8,7 +8,8 @@ datasource db {
 }
 
 model RegisterCode {
-  id   Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
   code String  @unique
   used Boolean @default(false)
 }
@@ -16,7 +17,49 @@ model RegisterCode {
 model Teacher {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
-  username  String   @unique
-  realName  String
-  password  String
+
+  username String @unique
+  realName String
+  password String
+
+  students       Student[]
+  studentRemarks StudentRemark[]
+
+  messages Message[]
+}
+
+model Student {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  key           String @unique
+  defaultRemark String
+
+  teacher        Teacher[]
+  studentRemarks StudentRemark[]
+
+  messages Message[]
+}
+
+model StudentRemark {
+  id Int @id @default(autoincrement())
+
+  content String
+
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  student   Student @relation(fields: [studentId], references: [id])
+  teacherId String
+  studentId String
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  content String
+
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String
+
+  students Student[]
 }
