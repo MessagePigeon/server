@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
-import { TeacherAuthGuard } from '~~/guards/teacher-auth.guard';
+import { TeacherAuthGuard } from '~/common/guards/teacher-auth.guard';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
 import { ModifyPasswordDto } from './dto/modify-password.dto';
 import { modifyRealNameDto } from './dto/modify-real-name.dto';

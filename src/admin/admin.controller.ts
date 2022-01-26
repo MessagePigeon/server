@@ -17,7 +17,7 @@ import { AuthService } from '~/auth/auth.service';
 import { PaginationDto } from '~/common/dto/pagination.dto';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { TeacherService } from '~/teacher/teacher.service';
-import { AdminAuthGuard } from '~~/guards/admin-auth.guard';
+import { AdminAuthGuard } from '~/common/guards/admin-auth.guard';
 import { AdminService } from './admin.service';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
