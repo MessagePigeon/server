@@ -11,7 +11,7 @@ export class AdminService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateRegisterCodes(count: number) {
+  async generateTeacherRegisterCodes(count: number) {
     if (count === 1) {
       const code = generateRandomString(32);
       return await this.db.registerCode.create({
@@ -41,7 +41,7 @@ export class AdminService {
     }
   }
 
-  async findRegisterCode(skip: number, take: number, used?: boolean) {
+  async findTeacherRegisterCode(skip: number, take: number, used?: boolean) {
     const data = await this.db.registerCode.findMany({
       select: { id: true, code: true, used: used === undefined },
       where: used === undefined ? undefined : { used },

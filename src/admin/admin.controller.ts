@@ -49,35 +49,35 @@ export class AdminController {
     }
   }
 
-  @Put('register-codes')
+  @Get('init')
   @UseGuards(AdminAuthGuard)
-  @ApiOperation({ summary: 'Generate teacher register codes' })
-  async generateRegisterCodes(
-    @Body(new ValidationPipe()) { count }: GenerateRegisterCodesDto,
-  ) {
-    return await this.adminService.generateRegisterCodes(count);
+  @ApiOperation({ summary: 'Init with jwt header' })
+  init(@Req() { user }: AdminAuthGuardRequest) {
+    return user;
   }
 
-  @Get('register-codes')
+  @Put('teacher/register-codes')
+  @UseGuards(AdminAuthGuard)
+  @ApiOperation({ summary: 'Generate teacher register codes' })
+  async generateTeacherRegisterCodes(
+    @Body(new ValidationPipe()) { count }: GenerateRegisterCodesDto,
+  ) {
+    return await this.adminService.generateTeacherRegisterCodes(count);
+  }
+
+  @Get('teacher/register-codes')
   @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Get teacher register codes' })
-  async findRegisterCodes(
+  async findTeacherRegisterCodes(
     @Query(new ValidationPipe()) { skip, take, used }: FindRegisterCodeDto,
   ) {
-    return await this.adminService.findRegisterCode(
+    return await this.adminService.findTeacherRegisterCode(
       +skip,
       +take,
       (used as unknown) === undefined
         ? undefined
         : (used as unknown) === 'true',
     );
-  }
-
-  @Get('init')
-  @UseGuards(AdminAuthGuard)
-  @ApiOperation({ summary: 'Init with jwt header' })
-  init(@Req() { user }: AdminAuthGuardRequest) {
-    return user;
   }
 
   @Post('teacher')
