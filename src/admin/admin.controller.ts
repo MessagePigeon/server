@@ -14,12 +14,14 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
+import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { TeacherService } from '~/teacher/teacher.service';
 import { AdminAuthGuard } from '~~/guards/admin-auth.guard';
 import { AdminService } from './admin.service';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
 import { FindTeachersDto } from './dto/find-teachers.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
+import { GenerateStudentDto } from './dto/generate-student.dto';
 import { GenerateTeacherDto } from './dto/generate-teacher.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
 import { ModifyTeacherRealNameDto } from './dto/modify-teacher-real-name.dto';
@@ -115,5 +117,24 @@ export class AdminController {
     @Body(new ValidationPipe()) { id }: ResetTeacherPasswordDto,
   ) {
     return await this.adminService.resetTeacherPassword(id);
+  }
+
+  @Post('student')
+  @UseGuards(AdminAuthGuard)
+  @ApiOperation({ summary: 'Generate student with key or random string' })
+  async generateStudent(
+    @Body(new ValidationPipe()) { key, defaultRemark }: GenerateStudentDto,
+  ) {
+    if (key === undefined) {
+      key = generateRandomString(16);
+    }
+    const isStudentKeyRepeated = await this.adminService.checkStudentKeyExist(
+      key,
+    );
+    if (!isStudentKeyRepeated) {
+      return await this.adminService.generateStudent(key, defaultRemark);
+    } else {
+      throw new HttpException('Key Repeated', HttpStatus.FORBIDDEN);
+    }
   }
 }
