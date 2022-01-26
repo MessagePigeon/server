@@ -91,14 +91,6 @@ export class AdminService {
     return { username, newPassword };
   }
 
-  async checkStudentKeyExist(key: string) {
-    const isStudentKeyExistData = await this.db.student.findUnique({
-      where: { key },
-    });
-    const isStudentKeyExist = isStudentKeyExistData !== null;
-    return isStudentKeyExist;
-  }
-
   async generateStudent(key: string, defaultRemark: string) {
     await this.db.student.create({
       data: { key, defaultRemark },

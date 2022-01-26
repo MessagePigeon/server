@@ -27,6 +27,7 @@ import { LoginAdminDto } from './dto/login-admin.dto';
 import { ModifyTeacherRealNameDto } from './dto/modify-teacher-real-name.dto';
 import { ResetTeacherPasswordDto } from './dto/reset-teacher-password.dto';
 import { AdminAuthGuardRequest } from './types/admin-auth-guard-request.type';
+import { StudentService } from '~/student/student.service';
 
 @Controller('admin')
 @ApiTags('admin')
@@ -35,6 +36,7 @@ export class AdminController {
     private readonly adminService: AdminService,
     private readonly authService: AuthService,
     private readonly teacherService: TeacherService,
+    private readonly studentService: StudentService,
   ) {}
 
   @Post('login')
@@ -128,9 +130,7 @@ export class AdminController {
     if (key === undefined) {
       key = generateRandomString(16);
     }
-    const isStudentKeyRepeated = await this.adminService.checkStudentKeyExist(
-      key,
-    );
+    const isStudentKeyRepeated = await this.studentService.checkKeyExist(key);
     if (!isStudentKeyRepeated) {
       return await this.adminService.generateStudent(key, defaultRemark);
     } else {
