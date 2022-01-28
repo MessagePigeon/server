@@ -8,15 +8,18 @@ specifiers:
   '@nestjs/jwt': ^8.0.0
   '@nestjs/passport': ^8.1.0
   '@nestjs/platform-express': ^8.0.0
+  '@nestjs/platform-ws': ^8.2.6
   '@nestjs/schematics': ^8.0.0
   '@nestjs/swagger': ^5.1.5
   '@nestjs/testing': ^8.0.0
+  '@nestjs/websockets': ^8.2.6
   '@prisma/client': ^3.8.1
   '@types/express': ^4.17.13
   '@types/jest': 27.0.2
   '@types/node': ^16.0.0
   '@types/passport-jwt': ^3.0.6
   '@types/supertest': ^2.0.11
+  '@types/ws': ^8.2.2
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': ^5.0.0
   argon2: ^0.28.3
@@ -44,15 +47,18 @@ specifiers:
   tsconfig-paths: ^3.10.1
   typescript: ^4.3.5
   webpack: ^5.66.0
+  ws: ^8.4.2
 
 dependencies:
   '@nestjs/common': 8.2.5_e2dd7264172553abc41c1a07952dd8ca
   '@nestjs/config': 1.1.6_4d34bcc4311a780925020c9f901d5309
-  '@nestjs/core': 8.2.5_2d391bccf7bae46d184f78881868b795
+  '@nestjs/core': 8.2.5_49cfbf09453cf881427d44428c3c3aaa
   '@nestjs/jwt': 8.0.0_@nestjs+common@8.2.5
   '@nestjs/passport': 8.1.0_fad574eebf217792c1a96edf566992e9
   '@nestjs/platform-express': 8.2.5_dd9ef2e1e23f087665d46fe53bbbed58
+  '@nestjs/platform-ws': 8.2.6_ac3be82487f15c759a19629d6fff9f1c
   '@nestjs/swagger': 5.1.5_53f26b9e3dfc6f35a6f9eba4606ad5ff
+  '@nestjs/websockets': 8.2.6_90187d3b27b9ec0e2b0c280de38fef53
   '@prisma/client': 3.8.1_prisma@3.8.1
   argon2: 0.28.3
   class-transformer: 0.5.1
@@ -65,6 +71,7 @@ dependencies:
   rimraf: 3.0.2
   rxjs: 7.5.2
   swagger-ui-express: 4.3.0_express@4.17.2
+  ws: 8.4.2
 
 devDependencies:
   '@nestjs/cli': 8.2.0_eslint@8.7.0
@@ -75,6 +82,7 @@ devDependencies:
   '@types/node': 16.11.21
   '@types/passport-jwt': 3.0.6
   '@types/supertest': 2.0.11
+  '@types/ws': 8.2.2
   '@typescript-eslint/eslint-plugin': 5.10.0_3b6b276e93ead7cf6063f183a5e18d1f
   '@typescript-eslint/parser': 5.10.0_eslint@8.7.0+typescript@4.5.4
   eslint: 8.7.0
@@ -873,7 +881,7 @@ packages:
       uuid: 8.3.2
     dev: false
 
-  /@nestjs/core/8.2.5_2d391bccf7bae46d184f78881868b795:
+  /@nestjs/core/8.2.5_49cfbf09453cf881427d44428c3c3aaa:
     resolution: {integrity: sha512-R0vp0VlAQFP7qBTZMzMspwOCO6MpsMJON/MsrfHVGgZS5Sd5DInfboWhe2COPnAr+VAT0o4FAKObW08Pdb5hMg==}
     requiresBuild: true
     peerDependencies:
@@ -893,6 +901,7 @@ packages:
     dependencies:
       '@nestjs/common': 8.2.5_e2dd7264172553abc41c1a07952dd8ca
       '@nestjs/platform-express': 8.2.5_dd9ef2e1e23f087665d46fe53bbbed58
+      '@nestjs/websockets': 8.2.6_90187d3b27b9ec0e2b0c280de38fef53
       '@nuxtjs/opencollective': 0.3.2
       fast-safe-stringify: 2.1.1
       iterare: 1.2.1
@@ -947,12 +956,29 @@ packages:
       '@nestjs/core': ^8.0.0
     dependencies:
       '@nestjs/common': 8.2.5_e2dd7264172553abc41c1a07952dd8ca
-      '@nestjs/core': 8.2.5_2d391bccf7bae46d184f78881868b795
+      '@nestjs/core': 8.2.5_49cfbf09453cf881427d44428c3c3aaa
       body-parser: 1.19.1
       cors: 2.8.5
       express: 4.17.1
       multer: 1.4.4
       tslib: 2.3.1
+    dev: false
+
+  /@nestjs/platform-ws/8.2.6_ac3be82487f15c759a19629d6fff9f1c:
+    resolution: {integrity: sha512-CW0OIU5zFGsYit+dsRVP7NL0ZFXJPpQ00e+Ht+5m12OohXywPJ78XBDZjwq01ACmvoDRlOpcF11IrC0qsczgfQ==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0
+      '@nestjs/websockets': ^8.0.0
+      rxjs: ^7.1.0
+    dependencies:
+      '@nestjs/common': 8.2.5_e2dd7264172553abc41c1a07952dd8ca
+      '@nestjs/websockets': 8.2.6_90187d3b27b9ec0e2b0c280de38fef53
+      rxjs: 7.5.2
+      tslib: 2.3.1
+      ws: 7.5.6
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
     dev: false
 
   /@nestjs/schematics/8.0.5_chokidar@3.5.2+typescript@4.5.4:
@@ -1000,7 +1026,7 @@ packages:
         optional: true
     dependencies:
       '@nestjs/common': 8.2.5_e2dd7264172553abc41c1a07952dd8ca
-      '@nestjs/core': 8.2.5_2d391bccf7bae46d184f78881868b795
+      '@nestjs/core': 8.2.5_49cfbf09453cf881427d44428c3c3aaa
       '@nestjs/mapped-types': 1.0.0_156c8e2af2c7dad431aaf14c3b14437b
       lodash: 4.17.21
       path-to-regexp: 3.2.0
@@ -1026,10 +1052,31 @@ packages:
     dependencies:
       optional: 0.1.4
       '@nestjs/common': 8.2.5_e2dd7264172553abc41c1a07952dd8ca
-      '@nestjs/core': 8.2.5_2d391bccf7bae46d184f78881868b795
+      '@nestjs/core': 8.2.5_49cfbf09453cf881427d44428c3c3aaa
       '@nestjs/platform-express': 8.2.5_dd9ef2e1e23f087665d46fe53bbbed58
       tslib: 2.3.1
     dev: true
+
+  /@nestjs/websockets/8.2.6_90187d3b27b9ec0e2b0c280de38fef53:
+    resolution: {integrity: sha512-GUdPd5X+ojNeaYE+/4c4105tb8skvQt3KyR7CCzrhMziHsRakDLQ/8LO932fh8ADrkRxr7jfAbt3UTq5FggQ2w==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0
+      '@nestjs/core': ^8.0.0
+      '@nestjs/platform-socket.io': ^8.0.0
+      reflect-metadata: ^0.1.12
+      rxjs: ^7.1.0
+    peerDependenciesMeta:
+      '@nestjs/platform-socket.io':
+        optional: true
+    dependencies:
+      '@nestjs/common': 8.2.5_e2dd7264172553abc41c1a07952dd8ca
+      '@nestjs/core': 8.2.5_49cfbf09453cf881427d44428c3c3aaa
+      iterare: 1.2.1
+      object-hash: 2.2.0
+      reflect-metadata: 0.1.13
+      rxjs: 7.5.2
+      tslib: 2.3.1
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1314,6 +1361,12 @@ packages:
     resolution: {integrity: sha512-uci4Esokrw9qGb9bvhhSVEjd6rkny/dk5PK/Qz4yxKiyppEI+dOPlNrZBahE3i+PoKFYyDxChVXZ/ysS/nrm1Q==}
     dependencies:
       '@types/superagent': 4.1.14
+    dev: true
+
+  /@types/ws/8.2.2:
+    resolution: {integrity: sha512-NOn5eIcgWLOo6qW8AcuLZ7G8PycXu0xTxxkS6Q18VWFxgPUSOwV0pBj2a/4viNZVu25i7RIB7GttdkAIUUXOOg==}
+    dependencies:
+      '@types/node': 16.11.21
     dev: true
 
   /@types/yargs-parser/20.2.1:
@@ -5842,7 +5895,19 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dev: true
+
+  /ws/8.4.2:
+    resolution: {integrity: sha512-Kbk4Nxyq7/ZWqr/tarI9yIt/+iNNFOjBXEWgTb4ydaNHBNGgvf2QHbS9fdfsndfjFlFwEd4Al+mw83YkaD10ZA==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
 
   /xml-name-validator/3.0.0:
     resolution: {integrity: sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==}
