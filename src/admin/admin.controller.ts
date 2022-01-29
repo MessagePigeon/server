@@ -8,27 +8,25 @@ import {
   Post,
   Put,
   Query,
-  Req,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
+import { AdminAuthGuard } from '~/auth/guards/admin-auth.guard';
 import { PaginationDto } from '~/common/dto/pagination.dto';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
+import { StudentService } from '~/student/student.service';
 import { TeacherService } from '~/teacher/teacher.service';
-import { AdminAuthGuard } from '~/common/guards/admin-auth.guard';
 import { AdminService } from './admin.service';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
 import { GenerateStudentDto } from './dto/generate-student.dto';
 import { GenerateTeacherDto } from './dto/generate-teacher.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
+import { ModifyStudentDto } from './dto/modify-student.dto';
 import { ModifyTeacherRealNameDto } from './dto/modify-teacher-real-name.dto';
 import { ResetTeacherPasswordDto } from './dto/reset-teacher-password.dto';
-import { AdminAuthGuardRequest } from './types/admin-auth-guard-request.type';
-import { StudentService } from '~/student/student.service';
-import { ModifyStudentDto } from './dto/modify-student.dto';
 
 @Controller('admin')
 @ApiTags('admin')
@@ -41,10 +39,10 @@ export class AdminController {
   ) {}
 
   @Post('login')
-  login(@Body(new ValidationPipe()) { password }: LoginAdminDto) {
+  async login(@Body(new ValidationPipe()) { password }: LoginAdminDto) {
     const isPasswordValid = this.adminService.checkPassword(password);
     if (isPasswordValid) {
-      return this.authService.generateAdminJwt();
+      return await this.authService.signAdminJwt();
     } else {
       throw new HttpException('Password Incorrect', HttpStatus.UNAUTHORIZED);
     }
@@ -53,8 +51,8 @@ export class AdminController {
   @Get('init')
   @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Init with jwt header' })
-  init(@Req() { user }: AdminAuthGuardRequest) {
-    return user;
+  init() {
+    return true;
   }
 
   @Put('teacher/register-codes')

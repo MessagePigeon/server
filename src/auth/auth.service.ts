@@ -5,23 +5,37 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
 
-  private generateJwtWithId(id: string) {
+  async signJwtWithId(id: string) {
     const payload = { id };
-    const token = this.jwtService.sign(payload);
+    const token = await this.jwtService.signAsync(payload);
     return { token };
   }
 
-  generateAdminJwt() {
+  async verifyJwtWithId(token: string) {
+    try {
+      const { id } = await this.jwtService.verifyAsync<{ id: string }>(token);
+      return { authStatus: true, userId: id };
+    } catch (error) {
+      return { authStatus: false };
+    }
+  }
+
+  async signAdminJwt() {
     const payload = { message: 'pigeon' };
-    const token = this.jwtService.sign(payload);
+    const token = await this.jwtService.signAsync(payload);
     return { token };
   }
 
-  generateTeacherJwt(id: string) {
-    return this.generateJwtWithId(id);
+  async verifyAdminJwt(token: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+      return payload.message === 'pigeon';
+    } catch (error) {
+      return false;
+    }
   }
 
-  generateStudentJwt(id: string) {
-    return this.generateJwtWithId(id);
+  getBearerTokenFromRequest(request: { headers: { authorization: string } }) {
+    return request.headers.authorization.slice(7);
   }
 }

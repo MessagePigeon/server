@@ -6,19 +6,18 @@ import {
   HttpStatus,
   Patch,
   Post,
-  Req,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
-import { TeacherAuthGuard } from '~/common/guards/teacher-auth.guard';
+import { TeacherAuthGuard } from '~/auth/guards/teacher-auth.guard';
+import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
 import { ModifyPasswordDto } from './dto/modify-password.dto';
 import { modifyRealNameDto } from './dto/modify-real-name.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { TeacherService } from './teacher.service';
-import { TeacherAuthGuardRequest } from './types/teacher-auth-guard-request.type';
 
 @Controller('teacher')
 @ApiTags('teacher')
@@ -67,7 +66,7 @@ export class TeacherController {
       );
       if (isPasswordCorrect) {
         const id = await this.teacherService.getId(username);
-        return this.authService.generateTeacherJwt(id);
+        return await this.authService.signJwtWithId(id);
       } else {
         throw new HttpException('Password Incorrect', HttpStatus.UNAUTHORIZED);
       }
@@ -79,31 +78,31 @@ export class TeacherController {
   @Get('init')
   @UseGuards(TeacherAuthGuard)
   @ApiOperation({ summary: 'Init with jwt header' })
-  async init(@Req() req: TeacherAuthGuardRequest) {
-    return await this.teacherService.init(req.user.id);
+  async init(@AuthUserId() userId: string) {
+    return await this.teacherService.init(userId);
   }
 
   @Patch('real-name')
   @UseGuards(TeacherAuthGuard)
   async modifyRealName(
-    @Req() req: TeacherAuthGuardRequest,
+    @AuthUserId() userId: string,
     @Body(new ValidationPipe()) { newRealName }: modifyRealNameDto,
   ) {
-    return await this.teacherService.modifyRealName(req.user.id, newRealName);
+    return await this.teacherService.modifyRealName(userId, newRealName);
   }
 
   @Patch('password')
   @UseGuards(TeacherAuthGuard)
   async modifyPassword(
-    @Req() req: TeacherAuthGuardRequest,
+    @AuthUserId() userId: string,
     @Body(new ValidationPipe()) { oldPassword, newPassword }: ModifyPasswordDto,
   ) {
     const isOldPasswordCorrect = await this.teacherService.checkPasswordHash(
-      { id: req.user.id },
+      { id: userId },
       oldPassword,
     );
     if (isOldPasswordCorrect) {
-      return await this.teacherService.modifyPassword(req.user.id, newPassword);
+      return await this.teacherService.modifyPassword(userId, newPassword);
     } else {
       throw new HttpException('Old Password Incorrect', HttpStatus.FORBIDDEN);
     }
