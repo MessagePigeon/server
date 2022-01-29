@@ -9,7 +9,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { TeacherAuthGuard } from '~/auth/guards/teacher-auth.guard';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
@@ -77,6 +77,7 @@ export class TeacherController {
 
   @Get('init')
   @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
   @ApiOperation({ summary: 'Init with jwt header' })
   async init(@AuthUserId() userId: string) {
     return await this.teacherService.init(userId);
@@ -84,6 +85,7 @@ export class TeacherController {
 
   @Patch('real-name')
   @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
   async modifyRealName(
     @AuthUserId() userId: string,
     @Body(new ValidationPipe()) { newRealName }: modifyRealNameDto,
@@ -93,6 +95,7 @@ export class TeacherController {
 
   @Patch('password')
   @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
   async modifyPassword(
     @AuthUserId() userId: string,
     @Body(new ValidationPipe()) { oldPassword, newPassword }: ModifyPasswordDto,

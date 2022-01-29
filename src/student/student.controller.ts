@@ -8,7 +8,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { StudentAuthGuard } from '~/auth/guards/student-auth.guard';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
@@ -37,6 +37,7 @@ export class StudentController {
 
   @Get('init')
   @UseGuards(StudentAuthGuard)
+  @ApiBearerAuth('student')
   @ApiOperation({ summary: 'Init with jwt header' })
   async init(@AuthUserId() userId: string) {
     return await this.studentService.init(userId);

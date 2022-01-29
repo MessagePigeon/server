@@ -11,7 +11,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { AdminAuthGuard } from '~/auth/guards/admin-auth.guard';
 import { PaginationDto } from '~/common/dto/pagination.dto';
@@ -49,14 +49,16 @@ export class AdminController {
   }
 
   @Get('init')
+  @ApiBearerAuth('admin')
   @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Init with jwt header' })
   init() {
-    return true;
+    return { status: true };
   }
 
   @Put('teacher/register-codes')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Generate teacher register codes' })
   async generateTeacherRegisterCodes(
     @Body(new ValidationPipe()) { count }: GenerateRegisterCodesDto,
@@ -66,6 +68,7 @@ export class AdminController {
 
   @Get('teacher/register-codes')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Get teacher register codes' })
   async findTeacherRegisterCodes(
     @Query(new ValidationPipe()) { skip, take, used }: FindRegisterCodeDto,
@@ -81,6 +84,7 @@ export class AdminController {
 
   @Post('teacher')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Generate teacher with random password' })
   async generateTeacher(
     @Body(new ValidationPipe()) { username, realName }: GenerateTeacherDto,
@@ -97,6 +101,7 @@ export class AdminController {
 
   @Get('teachers')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
   async findTeachers(
     @Query(new ValidationPipe()) { skip, take }: PaginationDto,
   ) {
@@ -105,6 +110,7 @@ export class AdminController {
 
   @Patch('teacher/real-name')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
   async modifyTeacherRealName(
     @Body(new ValidationPipe()) { id, newRealName }: ModifyTeacherRealNameDto,
   ) {
@@ -113,6 +119,7 @@ export class AdminController {
 
   @Patch('teacher/password')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Reset teacher password to random string' })
   async resetTeacherPassword(
     @Body(new ValidationPipe()) { id }: ResetTeacherPasswordDto,
@@ -122,6 +129,7 @@ export class AdminController {
 
   @Post('student')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Generate student with key or random string' })
   async generateStudent(
     @Body(new ValidationPipe()) { key, defaultRemark }: GenerateStudentDto,
@@ -139,6 +147,7 @@ export class AdminController {
 
   @Get('students')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
   async findStudents(
     @Query(new ValidationPipe()) { skip, take }: PaginationDto,
   ) {
@@ -147,6 +156,7 @@ export class AdminController {
 
   @Patch('student')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
   async modifyStudent(
     @Body(new ValidationPipe()) { id, ...data }: ModifyStudentDto,
   ) {
