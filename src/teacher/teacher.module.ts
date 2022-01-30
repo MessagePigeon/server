@@ -8,15 +8,15 @@ import { TeacherGateway } from './teacher.gateway';
 import { TeacherService } from './teacher.service';
 
 @Module({
+  imports: [AuthModule],
+  exports: [TeacherService],
   controllers: [TeacherController],
   providers: [
     PrismaService,
+    StateService,
     TeacherService,
     TeacherGateway,
-    StateService,
     TeacherWsService,
   ],
-  imports: [AuthModule],
-  exports: [TeacherService, StateService],
 })
 export class TeacherModule {}
