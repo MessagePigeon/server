@@ -42,4 +42,15 @@ export class StudentController {
   async init(@AuthUserId() userId: string) {
     return await this.studentService.init(userId);
   }
+
+  @Get('connect-code')
+  @UseGuards(StudentAuthGuard)
+  @ApiBearerAuth('student')
+  findConnectCode(@AuthUserId() userId: string) {
+    try {
+      return this.studentService.findConnectCode(userId);
+    } catch (error) {
+      throw new HttpException('Connect Code Not Found', HttpStatus.NOT_FOUND);
+    }
+  }
 }

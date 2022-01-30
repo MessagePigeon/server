@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/common/services/prisma.service';
+import { StateService } from '~/common/services/state.service';
 
 @Injectable()
 export class StudentService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(
+    private readonly db: PrismaService,
+    private readonly state: StateService,
+  ) {}
 
   async checkKeyExist(key: string) {
     const isKeyExistData = await this.db.student.findUnique({ where: { key } });
@@ -24,5 +28,12 @@ export class StudentService {
       where: { id },
     });
     return info;
+  }
+
+  findConnectCode(id: string) {
+    const { connectCode } = this.state.onlineStudents.find(
+      ({ id: originId }) => originId === id,
+    );
+    return { connectCode };
   }
 }
