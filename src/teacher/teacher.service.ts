@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/common/services/prisma.service';
 import {
-  verifyHashPassword,
   signHashPassword,
+  verifyHashPassword,
 } from '~/common/utils/hash-password.util';
 
 @Injectable()
