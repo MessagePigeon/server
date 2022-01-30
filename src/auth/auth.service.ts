@@ -12,12 +12,8 @@ export class AuthService {
   }
 
   async verifyJwtWithId(token: string) {
-    try {
-      const { id } = await this.jwtService.verifyAsync<{ id: string }>(token);
-      return { authStatus: true, userId: id };
-    } catch (error) {
-      return { authStatus: false };
-    }
+    const { id } = await this.jwtService.verifyAsync<{ id: string }>(token);
+    return { userId: id };
   }
 
   async signAdminJwt() {
@@ -27,12 +23,8 @@ export class AuthService {
   }
 
   async verifyAdminJwt(token: string) {
-    try {
-      const payload = await this.jwtService.verifyAsync(token);
-      return payload.message === 'pigeon';
-    } catch (error) {
-      return false;
-    }
+    const payload = await this.jwtService.verifyAsync(token);
+    return payload.message === 'pigeon';
   }
 
   getBearerTokenFromRequest(request: { headers: { authorization: string } }) {

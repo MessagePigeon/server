@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '~/common/services/prisma.service';
 import { AuthService } from '../auth.service';
 
@@ -10,18 +15,20 @@ export class StudentAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest();
-    const token = this.authService.getBearerTokenFromRequest(request);
-    const { authStatus, userId } = await this.authService.verifyJwtWithId(
-      token,
-    );
-    const isIdExist =
-      (await this.db.student.findUnique({
-        where: { id: userId },
-      })) !== null;
-    if (isIdExist && authStatus) {
-      request.userId = userId;
+    try {
+      const request = context.switchToHttp().getRequest();
+      const token = this.authService.getBearerTokenFromRequest(request);
+      const { userId } = await this.authService.verifyJwtWithId(token);
+      const isIdExist =
+        (await this.db.student.findUnique({
+          where: { id: userId },
+        })) !== null;
+      if (isIdExist) {
+        request.userId = userId;
+      }
+      return isIdExist;
+    } catch (error) {
+      throw new UnauthorizedException();
     }
-    return isIdExist && authStatus;
   }
 }
