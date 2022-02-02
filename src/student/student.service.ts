@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/common/services/prisma.service';
-import { StateService } from '~/common/services/state.service';
+import { StateService } from '~/state/state.service';
 
 @Injectable()
 export class StudentService {

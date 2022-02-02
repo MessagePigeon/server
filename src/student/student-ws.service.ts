@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as WebSocket from 'ws';
-import { StateService } from '~/common/services/state.service';
+import { StateService } from '~/state/state.service';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
 
 @Injectable()
