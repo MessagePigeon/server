@@ -31,14 +31,14 @@ export class TeacherGateway {
 
   @SubscribeMessage('teacher:connectStudent')
   @UseGuards(TeacherWsAuthGuard)
-  onConnectStudent(
+  async onConnectStudent(
     @AuthUserId('ws') userId: string,
     @MessageBody()
     { connectCode, remark }: { connectCode: string; remark: string },
   ) {
     const student = this.teacherWsService.findStudentByConnectCode(connectCode);
     if (student) {
-      this.teacherWsService.connectStudent(userId, student, remark);
+      await this.teacherWsService.connectStudent(userId, student, remark);
     }
   }
 }
