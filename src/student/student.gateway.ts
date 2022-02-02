@@ -1,6 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,
+  MessageBody,
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
@@ -26,5 +27,31 @@ export class StudentGateway {
   @UseGuards(StudentWsAuthGuard)
   onOffline(@AuthUserId('ws') userId: string) {
     this.studentWsService.offline(userId);
+  }
+
+  @SubscribeMessage('student:reject-teacher-connect-request')
+  @UseGuards(StudentWsAuthGuard)
+  onRejectTeacherConnectRequest(
+    @AuthUserId('ws') userId: string,
+    @MessageBody() { requestId }: { requestId: string },
+  ) {
+    const isAllowAnswerRequest =
+      this.studentWsService.checkConnectRequestPermission(userId, requestId);
+    if (isAllowAnswerRequest) {
+      this.studentWsService.rejectTeacherConnectRequest(requestId);
+    }
+  }
+
+  @SubscribeMessage('student:accept-teacher-connect-request')
+  @UseGuards(StudentWsAuthGuard)
+  onAcceptTeacherConnectRequest(
+    @AuthUserId('ws') userId: string,
+    @MessageBody() { requestId }: { requestId: string },
+  ) {
+    const isAllowAnswerRequest =
+      this.studentWsService.checkConnectRequestPermission(userId, requestId);
+    if (isAllowAnswerRequest) {
+      this.studentWsService.acceptTeacherConnectRequest(requestId);
+    }
   }
 }
