@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { nanoid } from 'nanoid';
 import * as WebSocket from 'ws';
-import { PrismaService } from '~/common/services/prisma.service';
+import { PrismaService } from '~/prisma/prisma.service';
 import { onlineStudent, StateService } from '~/state/state.service';
 import { socketSend } from '~/common/utils/socket-send.util';
 

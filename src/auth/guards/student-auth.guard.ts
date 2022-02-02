@@ -4,7 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from '~/common/services/prisma.service';
+import { PrismaService } from '~/prisma/prisma.service';
 import { AuthService } from '../auth.service';
 
 @Injectable()

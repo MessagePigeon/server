@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { signHashPassword } from '~/common/utils/hash-password.util';
-import { PrismaService } from '~/common/services/prisma.service';
+import { PrismaService } from '~/prisma/prisma.service';
 import { ModifyStudentDto } from './dto/modify-student.dto';
 
 @Injectable()
