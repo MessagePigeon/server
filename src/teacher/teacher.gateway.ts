@@ -1,6 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,
+  MessageBody,
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
@@ -26,5 +27,18 @@ export class TeacherGateway {
   @UseGuards(TeacherWsAuthGuard)
   onOffline(@AuthUserId('ws') userId: string) {
     this.teacherWsService.offline(userId);
+  }
+
+  @SubscribeMessage('teacher:connectStudent')
+  @UseGuards(TeacherWsAuthGuard)
+  onConnectStudent(
+    @AuthUserId('ws') userId: string,
+    @MessageBody()
+    { connectCode, remark }: { connectCode: string; remark: string },
+  ) {
+    const student = this.teacherWsService.findStudentByConnectCode(connectCode);
+    if (student) {
+      this.teacherWsService.connectStudent(userId, student, remark);
+    }
   }
 }
