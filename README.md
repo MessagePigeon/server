@@ -29,3 +29,13 @@ npm run start:dev
 # production mode
 npm run start:prod
 ```
+
+## Usage
+
+### HTTP API
+
+After run the app, open `/api-docs` in the browser
+
+### WebSocket API
+
+See [WebSocket API Docs](WEBSOCKET.md)

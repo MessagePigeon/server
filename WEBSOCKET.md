@@ -1,0 +1,44 @@
+# WebSocket API
+
+## Convention
+
+According to [nestjs](https://docs.nestjs.com/websockets/gateways), we obey **event-data** format and transfer by json
+
+```json
+{
+  "event": "EVENT NAME",
+  "data": { "SOME": "DATA" }
+}
+```
+
+## Initialization
+
+After login, send this to server
+
+```json
+{
+  "event": "online",
+  "data": {
+    "token": "jwt token",
+    "role": "teacher" // teacher or student
+  }
+}
+```
+
+## Events
+
+> All events are sent by server
+
+### Student
+
+| Event           | Description                          | Data                         |
+| --------------- | ------------------------------------ | ---------------------------- |
+| logout          | cause by repeat login                | /                            |
+| connect-request | teacher want to connect this student | `{ requestId, teacherName }` |
+
+### Teacher
+
+| Event                  | Description            | Data            |
+| ---------------------- | ---------------------- | --------------- |
+| reject-connect-request | student reject connect | `{ studentId }` |
+| accept-connect-request | student accept connect | `{ studentId }` |
