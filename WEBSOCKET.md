@@ -20,7 +20,7 @@ After login, send this to server
   "event": "online",
   "data": {
     "token": "jwt token",
-    "role": "teacher" // teacher or student
+    "role": "teacher (or student)"
   }
 }
 ```
