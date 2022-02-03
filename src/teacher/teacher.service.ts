@@ -1,13 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '~/prisma/prisma.service';
+import { nanoid } from 'nanoid';
 import {
   signHashPassword,
   verifyHashPassword,
 } from '~/common/utils/hash-password.util';
+import { PrismaService } from '~/prisma/prisma.service';
+import { onlineStudent, StateService } from '~/state/state.service';
+import { WebsocketService } from '~/websocket/websocket.service';
 
 @Injectable()
 export class TeacherService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(
+    private readonly db: PrismaService,
+    private readonly state: StateService,
+    private readonly websocketService: WebsocketService,
+  ) {}
 
   async checkRegisterCodeValid(registerCode: string) {
     const isRegisterCodeValidData = await this.db.registerCode.findFirst({
@@ -83,5 +90,34 @@ export class TeacherService {
       select: { username: true },
     });
     return { username, password: newPassword };
+  }
+
+  findStudentByConnectCode(connectCode: string) {
+    return this.state.onlineStudents.find(
+      ({ connectCode: originConnectCode }) => originConnectCode === connectCode,
+    );
+  }
+
+  async connectStudent(
+    teacherId: string,
+    student: onlineStudent,
+    studentRemark: string,
+  ) {
+    const requestId = nanoid();
+    this.state.connectRequests.push({
+      id: requestId,
+      teacherId,
+      studentId: student.id,
+      studentRemark,
+    });
+    const { realName: teacherName } = await this.db.teacher.findUnique({
+      where: { id: teacherId },
+      select: { realName: true },
+    });
+    this.websocketService.socketSend('student', student.id, 'connect-request', {
+      requestId,
+      teacherName,
+    });
+    return { requestId };
   }
 }

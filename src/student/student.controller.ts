@@ -12,6 +12,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { StudentAuthGuard } from '~/auth/guards/student-auth.guard';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
+import { AnswerConnectRequestDto } from './dto/answer-connect-request.dto';
 import { StudentLoginDto } from './dto/student-login.dto';
 import { StudentService } from './student.service';
 
@@ -51,6 +52,34 @@ export class StudentController {
       return this.studentService.findConnectCode(userId);
     } catch (error) {
       throw new HttpException('Connect Code Not Found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @Post('connect-request-rejection')
+  @UseGuards(StudentAuthGuard)
+  @ApiBearerAuth('student')
+  async rejectConnectRequest(
+    @AuthUserId() userId: string,
+    @Body(new ValidationPipe()) { requestId }: AnswerConnectRequestDto,
+  ) {
+    const isAllowAnswerRequest =
+      this.studentService.checkConnectRequestPermission(userId, requestId);
+    if (isAllowAnswerRequest) {
+      this.studentService.rejectTeacherConnectRequest(requestId);
+    }
+  }
+
+  @Post('connect-request-acceptance')
+  @UseGuards(StudentAuthGuard)
+  @ApiBearerAuth('student')
+  async acceptConnectRequest(
+    @AuthUserId() userId: string,
+    @Body(new ValidationPipe()) { requestId }: AnswerConnectRequestDto,
+  ) {
+    const isAllowAnswerRequest =
+      this.studentService.checkConnectRequestPermission(userId, requestId);
+    if (isAllowAnswerRequest) {
+      this.studentService.acceptTeacherConnectRequest(requestId);
     }
   }
 }

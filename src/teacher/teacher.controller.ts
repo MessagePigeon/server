@@ -13,6 +13,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { TeacherAuthGuard } from '~/auth/guards/teacher-auth.guard';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
+import { ConnectStudentDto } from './dto/connect-student.dto';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
 import { ModifyPasswordDto } from './dto/modify-password.dto';
 import { modifyRealNameDto } from './dto/modify-real-name.dto';
@@ -108,6 +109,21 @@ export class TeacherController {
       return await this.teacherService.modifyPassword(userId, newPassword);
     } else {
       throw new HttpException('Old Password Incorrect', HttpStatus.FORBIDDEN);
+    }
+  }
+
+  @Post('connect-request')
+  @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
+  async sendConnectRequest(
+    @AuthUserId() userId: string,
+    @Body(new ValidationPipe()) { connectCode, remark }: ConnectStudentDto,
+  ) {
+    const student = this.teacherService.findStudentByConnectCode(connectCode);
+    if (student) {
+      return await this.teacherService.connectStudent(userId, student, remark);
+    } else {
+      throw new HttpException('Connect Code Not Found', HttpStatus.NOT_FOUND);
     }
   }
 }

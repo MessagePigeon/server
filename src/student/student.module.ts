@@ -2,15 +2,14 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from '~/auth/auth.module';
 import { PrismaModule } from '~/prisma/prisma.module';
 import { StateModule } from '~/state/state.module';
-import { StudentWsService } from './student-ws.service';
+import { WebsocketModule } from '~/websocket/websocket.module';
 import { StudentController } from './student.controller';
-import { StudentGateway } from './student.gateway';
 import { StudentService } from './student.service';
 
 @Module({
-  imports: [AuthModule, StateModule, PrismaModule],
+  imports: [AuthModule, StateModule, PrismaModule, WebsocketModule],
   exports: [StudentService],
   controllers: [StudentController],
-  providers: [StudentService, StudentGateway, StudentWsService],
+  providers: [StudentService],
 })
 export class StudentModule {}
