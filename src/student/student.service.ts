@@ -72,7 +72,7 @@ export class StudentService {
     });
     await this.db.studentRemark.create({
       data: {
-        content: studentRemark,
+        remark: studentRemark,
         teacher: { connect: { id: teacherId } },
         student: { connect: { id: studentId } },
       },
