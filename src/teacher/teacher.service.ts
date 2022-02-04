@@ -176,10 +176,9 @@ export class TeacherService {
     });
   }
 
-  async modifyStudentRemark(
+  private async findRemarkIdByTeacherAndStudent(
     teacherId: string,
     studentId: string,
-    remark: string,
   ) {
     const { studentRemarks: studentRemarksData } =
       await this.db.teacher.findUnique({
@@ -188,11 +187,40 @@ export class TeacherService {
           studentRemarks: { where: { studentId }, select: { id: true } },
         },
       });
-    const remarkId = studentRemarksData.at(0).id;
+    return studentRemarksData.at(0).id;
+  }
+
+  async modifyStudentRemark(
+    teacherId: string,
+    studentId: string,
+    remark: string,
+  ) {
+    const remarkId = await this.findRemarkIdByTeacherAndStudent(
+      teacherId,
+      studentId,
+    );
     return await this.db.studentRemark.update({
       where: { id: remarkId },
       data: { remark },
       select: { id: true, remark: true },
     });
+  }
+
+  async deleteStudent(teacherId: string, studentId: string) {
+    const remarkId = await this.findRemarkIdByTeacherAndStudent(
+      teacherId,
+      studentId,
+    );
+    await this.db.studentRemark.delete({ where: { id: remarkId } });
+    await this.db.teacher.update({
+      where: { id: teacherId },
+      data: { students: { disconnect: { id: studentId } } },
+    });
+    this.websocketService.socketSend(
+      'student',
+      studentId,
+      'teacher-disconnect',
+      { teacherId },
+    );
   }
 }

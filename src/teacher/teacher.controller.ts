@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -15,6 +16,7 @@ import { AuthService } from '~/auth/auth.service';
 import { TeacherAuthGuard } from '~/auth/guards/teacher-auth.guard';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
 import { ConnectStudentDto } from './dto/connect-student.dto';
+import { DeleteStudentDto } from './dto/delete-student.dto';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
 import { ModifyPasswordDto } from './dto/modify-password.dto';
 import { modifyRealNameDto } from './dto/modify-real-name.dto';
@@ -179,5 +181,17 @@ export class TeacherController {
       studentId,
       newRemark,
     );
+  }
+
+  @Delete('student')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
+  async deleteStudent(
+    @AuthUserId() userId: string,
+    @Body(new ValidationPipe())
+    { studentId }: DeleteStudentDto,
+  ) {
+    return await this.teacherService.deleteStudent(userId, studentId);
   }
 }
