@@ -35,7 +35,7 @@ model Student {
   key           String @unique
   defaultRemark String
 
-  teacher        Teacher[]
+  teachers       Teacher[]
   studentRemarks StudentRemark[]
 
   messages Message[]
