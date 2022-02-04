@@ -19,6 +19,7 @@ import { LoginTeacherDto } from './dto/login-teacher.dto';
 import { ModifyPasswordDto } from './dto/modify-password.dto';
 import { modifyRealNameDto } from './dto/modify-real-name.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
+import { SendMessageDto } from './dto/send-message.dto';
 import { TeacherService } from './teacher.service';
 
 @Controller('teacher')
@@ -134,5 +135,22 @@ export class TeacherController {
   @ApiBearerAuth('teacher')
   async findStudents(@AuthUserId() userId: string) {
     return await this.teacherService.findStudents(userId);
+  }
+
+  @Post('message')
+  @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
+  async sendMessage(
+    @AuthUserId() userId: string,
+    @Body(new ValidationPipe())
+    { studentIds, message, tts, closeDelay }: SendMessageDto,
+  ) {
+    return await this.teacherService.sendMessage(
+      userId,
+      studentIds,
+      message,
+      tts,
+      closeDelay,
+    );
   }
 }

@@ -18,6 +18,12 @@ export type connectRequest = {
   studentId: string;
   studentRemark: string;
 };
+export type showingMessage = {
+  id: number;
+  teacherId: string;
+  studentIds: Set<string>;
+  closedStudentIds: Set<string>;
+};
 
 @Injectable()
 export class StateService {
@@ -25,4 +31,5 @@ export class StateService {
   onlineTeachers: onlineTeacher[] = [];
   onlineStudents: onlineStudent[] = [];
   connectRequests: connectRequest[] = [];
+  showingMessages: showingMessage[] = [];
 }

@@ -131,4 +131,39 @@ export class TeacherService {
       ...data,
     }));
   }
+
+  async sendMessage(
+    teacherId: string,
+    studentIds: string[],
+    message: string,
+    tts: boolean,
+    closeDelay: number,
+  ) {
+    const {
+      id: messageId,
+      teacher: { realName: teacherName },
+    } = await this.db.message.create({
+      data: {
+        message,
+        teacher: { connect: { id: teacherId } },
+        students: { connect: studentIds.map((id) => ({ id })) },
+      },
+      select: { id: true, teacher: { select: { realName: true } } },
+    });
+    this.state.showingMessages.push({
+      id: messageId,
+      teacherId,
+      studentIds: new Set(studentIds),
+      closedStudentIds: new Set(),
+    });
+    studentIds.forEach((id) => {
+      this.websocketService.socketSend('student', id, 'message', {
+        messageId,
+        message,
+        teacherName,
+        tts,
+        closeDelay,
+      });
+    });
+  }
 }
