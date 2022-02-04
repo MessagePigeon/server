@@ -31,11 +31,12 @@ After login, send this to server
 
 ### Student
 
-| Event           | Description                          | Data                                                   |
-| --------------- | ------------------------------------ | ------------------------------------------------------ |
-| logout          | caused by duplicate login            | /                                                      |
-| connect-request | teacher want to connect this student | `{ requestId, teacherName }`                           |
-| message         | message sent by teacher              | `{ messageId, message, teacherName, tts, closeDelay }` |
+| Event              | Description                          | Data                                                   |
+| ------------------ | ------------------------------------ | ------------------------------------------------------ |
+| logout             | caused by duplicate login            | /                                                      |
+| connect-request    | teacher want to connect this student | `{ requestId, teacherName }`                           |
+| message            | message sent by teacher              | `{ messageId, message, teacherName, tts, closeDelay }` |
+| teacher-disconnect | /                                    | `{ teacherId }`                                        |
 
 ### Teacher
 
