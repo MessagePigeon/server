@@ -33,7 +33,7 @@ After login, send this to server
 
 | Event           | Description                          | Data                         |
 | --------------- | ------------------------------------ | ---------------------------- |
-| logout          | cause by repeat login                | /                            |
+| logout          | caused by duplicate login            | /                            |
 | connect-request | teacher want to connect this student | `{ requestId, teacherName }` |
 
 ### Teacher
@@ -42,3 +42,5 @@ After login, send this to server
 | ---------------------- | ---------------------- | --------------- |
 | reject-connect-request | student reject connect | `{ studentId }` |
 | accept-connect-request | student accept connect | `{ studentId }` |
+| student-online         | /                      | `{ studentId }` |
+| student-offline        | /                      | `{ studentId }` |
