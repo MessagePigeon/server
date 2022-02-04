@@ -86,4 +86,12 @@ export class StudentService {
     );
     return { teacherId, teacherName };
   }
+
+  async findTeachers(id: string) {
+    const { teachers: data } = await this.db.student.findUnique({
+      where: { id },
+      select: { teachers: { select: { id: true, realName: true } } },
+    });
+    return data.map(({ id, realName }) => ({ id, name: realName }));
+  }
 }

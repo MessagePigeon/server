@@ -84,4 +84,11 @@ export class StudentController {
       return await this.studentService.acceptTeacherConnectRequest(requestId);
     }
   }
+
+  @Get('teachers')
+  @UseGuards(StudentAuthGuard)
+  @ApiBearerAuth('student')
+  async findTeachers(@AuthUserId() userId: string) {
+    return await this.studentService.findTeachers(userId);
+  }
 }
