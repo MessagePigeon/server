@@ -13,19 +13,26 @@ export class WebsocketService {
     private readonly db: PrismaService,
   ) {}
 
+  private checkClientOnline(id: string) {
+    return this.state.onlineClients.map(({ id }) => id).includes(id);
+  }
+
   socketSend(
     role: 'student' | 'teacher',
     id: string,
     event: string,
     data?: Record<string, any>,
   ) {
-    const payload = JSON.stringify({ event, data });
-    if (role === 'teacher') {
-      const { clients } = findArrayElementById(this.state.onlineTeachers, id);
-      clients.forEach((client) => client.send(payload));
-    } else {
-      const { client } = findArrayElementById(this.state.onlineStudents, id);
-      client.send(payload);
+    const isClientOnline = this.checkClientOnline(id);
+    if (isClientOnline) {
+      const payload = JSON.stringify({ event, data });
+      if (role === 'teacher') {
+        const { clients } = findArrayElementById(this.state.onlineTeachers, id);
+        clients.forEach((client) => client.send(payload));
+      } else {
+        const { client } = findArrayElementById(this.state.onlineStudents, id);
+        client.send(payload);
+      }
     }
   }
 
