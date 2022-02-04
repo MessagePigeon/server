@@ -109,14 +109,14 @@ export class TeacherService {
   async connectStudent(
     teacherId: string,
     student: onlineStudent,
-    studentRemark: string,
+    remark: string,
   ) {
     const requestId = nanoid();
     this.state.connectRequests.push({
       id: requestId,
       teacherId,
       studentId: student.id,
-      studentRemark,
+      remark,
     });
     const { realName: teacherName } = await this.db.teacher.findUnique({
       where: { id: teacherId },
@@ -126,7 +126,7 @@ export class TeacherService {
       requestId,
       teacherName,
     });
-    return { studentId: student.id, requestId };
+    return { studentId: student.id, requestId, remark };
   }
 
   async findStudents(id: string) {
