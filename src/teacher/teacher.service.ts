@@ -118,6 +118,6 @@ export class TeacherService {
       requestId,
       teacherName,
     });
-    return { requestId };
+    return { studentId: student.id, requestId };
   }
 }
