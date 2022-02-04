@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
   HttpStatus,
   Patch,
@@ -54,6 +55,7 @@ export class TeacherController {
   }
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(
     @Body(new ValidationPipe()) { username, password }: LoginTeacherDto,
   ) {

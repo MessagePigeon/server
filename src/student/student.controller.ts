@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
   HttpStatus,
   Post,
@@ -25,6 +26,7 @@ export class StudentController {
   ) {}
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Login with key' })
   async login(@Body(new ValidationPipe()) { key }: StudentLoginDto) {
     const isKeyExist = await this.studentService.checkKeyExist(key);

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
   HttpStatus,
   Patch,
@@ -39,6 +40,7 @@ export class AdminController {
   ) {}
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(@Body(new ValidationPipe()) { password }: LoginAdminDto) {
     const isPasswordValid = this.adminService.checkPassword(password);
     if (isPasswordValid) {
