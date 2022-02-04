@@ -124,11 +124,22 @@ export class TeacherController {
     @Body(new ValidationPipe()) { connectCode, remark }: ConnectStudentDto,
   ) {
     const student = this.teacherService.findStudentByConnectCode(connectCode);
-    if (student) {
-      return await this.teacherService.connectStudent(userId, student, remark);
-    } else {
+    if (!student) {
       throw new HttpException('Connect Code Not Found', HttpStatus.NOT_FOUND);
+    } else {
+      const isStudentAlreadyConnected =
+        await this.teacherService.checkStudentAlreadyConnected(
+          userId,
+          student.id,
+        );
+      if (isStudentAlreadyConnected) {
+        throw new HttpException(
+          'Student Already Connected',
+          HttpStatus.FORBIDDEN,
+        );
+      }
     }
+    return await this.teacherService.connectStudent(userId, student, remark);
   }
 
   @Get('students')

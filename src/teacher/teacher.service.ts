@@ -98,6 +98,14 @@ export class TeacherService {
     );
   }
 
+  async checkStudentAlreadyConnected(teacherId: string, studentId: string) {
+    const { students } = await this.db.teacher.findUnique({
+      where: { id: teacherId },
+      select: { students: { select: { id: true } } },
+    });
+    return students.map(({ id }) => id).includes(studentId);
+  }
+
   async connectStudent(
     teacherId: string,
     student: onlineStudent,
