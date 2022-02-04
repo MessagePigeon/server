@@ -167,4 +167,24 @@ export class TeacherService {
       });
     });
   }
+
+  async modifyStudentRemark(
+    teacherId: string,
+    studentId: string,
+    remark: string,
+  ) {
+    const { studentRemarks: studentRemarksData } =
+      await this.db.teacher.findUnique({
+        where: { id: teacherId },
+        select: {
+          studentRemarks: { where: { studentId }, select: { id: true } },
+        },
+      });
+    const remarkId = studentRemarksData.at(0).id;
+    return await this.db.studentRemark.update({
+      where: { id: remarkId },
+      data: { remark },
+      select: { id: true, remark: true },
+    });
+  }
 }

@@ -18,6 +18,7 @@ import { ConnectStudentDto } from './dto/connect-student.dto';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
 import { ModifyPasswordDto } from './dto/modify-password.dto';
 import { modifyRealNameDto } from './dto/modify-real-name.dto';
+import { ModifyStudentRemarkDto } from './dto/modify-student-remark.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { TeacherService } from './teacher.service';
@@ -151,6 +152,21 @@ export class TeacherController {
       message,
       tts,
       closeDelay,
+    );
+  }
+
+  @Patch('student/remark')
+  @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
+  async modifyStudentRemark(
+    @AuthUserId() userId: string,
+    @Body(new ValidationPipe())
+    { studentId, newRemark }: ModifyStudentRemarkDto,
+  ) {
+    return await this.teacherService.modifyStudentRemark(
+      userId,
+      studentId,
+      newRemark,
     );
   }
 }
