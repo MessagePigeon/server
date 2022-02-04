@@ -120,4 +120,15 @@ export class TeacherService {
     });
     return { studentId: student.id, requestId };
   }
+
+  async findStudents(id: string) {
+    const dbData = await this.db.studentRemark.findMany({
+      where: { teacherId: id },
+      select: { studentId: true, remark: true },
+    });
+    return dbData.map((data) => ({
+      online: this.state.onlineStudents.some(({ id }) => id === data.studentId),
+      ...data,
+    }));
+  }
 }

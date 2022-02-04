@@ -126,4 +126,11 @@ export class TeacherController {
       throw new HttpException('Connect Code Not Found', HttpStatus.NOT_FOUND);
     }
   }
+
+  @Get('students')
+  @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
+  async findStudents(@AuthUserId() userId: string) {
+    return await this.teacherService.findStudents(userId);
+  }
 }
