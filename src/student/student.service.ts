@@ -66,9 +66,10 @@ export class StudentService {
       this.state.connectRequests,
       requestId,
     );
-    await this.db.teacher.update({
+    const { realName: teacherName } = await this.db.teacher.update({
       where: { id: teacherId },
       data: { students: { connect: { id: studentId } } },
+      select: { realName: true },
     });
     await this.db.studentRemark.create({
       data: {
@@ -83,5 +84,6 @@ export class StudentService {
       'accept-connect-request',
       { studentId },
     );
+    return { teacherId, teacherName };
   }
 }

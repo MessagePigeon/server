@@ -81,7 +81,7 @@ export class StudentController {
     const isAllowAnswerRequest =
       this.studentService.checkConnectRequestPermission(userId, requestId);
     if (isAllowAnswerRequest) {
-      this.studentService.acceptTeacherConnectRequest(requestId);
+      return await this.studentService.acceptTeacherConnectRequest(requestId);
     }
   }
 }
