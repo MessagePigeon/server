@@ -124,6 +124,7 @@ export class TeacherService {
   async findStudents(id: string) {
     const dbData = await this.db.studentRemark.findMany({
       where: { teacherId: id },
+      orderBy: { createdAt: 'desc' },
       select: { studentId: true, remark: true },
     });
     return dbData.map((data) => ({

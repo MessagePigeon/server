@@ -42,7 +42,8 @@ model Student {
 }
 
 model StudentRemark {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
 
   remark String
 
