@@ -62,7 +62,7 @@ export class StudentService {
   }
 
   async acceptTeacherConnectRequest(requestId: string) {
-    const { studentId, teacherId, studentRemark } = findArrayElementById(
+    const { studentId, teacherId, remark } = findArrayElementById(
       this.state.connectRequests,
       requestId,
     );
@@ -73,7 +73,7 @@ export class StudentService {
     });
     await this.db.studentRemark.create({
       data: {
-        remark: studentRemark,
+        remark,
         teacher: { connect: { id: teacherId } },
         student: { connect: { id: studentId } },
       },
