@@ -150,6 +150,7 @@ export class TeacherService {
   ) {
     const {
       id: messageId,
+      createdAt,
       teacher: { realName: teacherName },
     } = await this.db.message.create({
       data: {
@@ -157,7 +158,11 @@ export class TeacherService {
         teacher: { connect: { id: teacherId } },
         students: { connect: studentIds.map((id) => ({ id })) },
       },
-      select: { id: true, teacher: { select: { realName: true } } },
+      select: {
+        id: true,
+        createdAt: true,
+        teacher: { select: { realName: true } },
+      },
     });
     this.state.showingMessages.push({
       id: messageId,
@@ -168,12 +173,14 @@ export class TeacherService {
     studentIds.forEach((id) => {
       this.websocketService.socketSend('student', id, 'message', {
         messageId,
+        createdAt,
         message,
         teacherName,
         tts,
         closeDelay,
       });
     });
+    return { messageId, createdAt, message, studentIds };
   }
 
   private async findRemarkIdByTeacherAndStudent(
