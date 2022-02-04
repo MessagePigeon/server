@@ -3,11 +3,15 @@ import * as WebSocket from 'ws';
 import { deleteArrayElementById } from '~/common/utils/delete-array-element-by-id.util';
 import { findArrayElementById } from '~/common/utils/find-array-element-by-id.util';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
+import { PrismaService } from '~/prisma/prisma.service';
 import { StateService } from '~/state/state.service';
 
 @Injectable()
 export class WebsocketService {
-  constructor(private readonly state: StateService) {}
+  constructor(
+    private readonly state: StateService,
+    private readonly db: PrismaService,
+  ) {}
 
   socketSend(
     role: 'student' | 'teacher',
@@ -25,8 +29,20 @@ export class WebsocketService {
     }
   }
 
-  private studentOffline(id: string) {
+  private async findStudentConnectedTeachers(id: string) {
+    const { teachers } = await this.db.student.findUnique({
+      where: { id },
+      select: { teachers: { select: { id: true } } },
+    });
+    return teachers.map(({ id }) => id);
+  }
+
+  private async studentOffline(id: string) {
     deleteArrayElementById(this.state.onlineStudents, id);
+    const connectedTeachers = await this.findStudentConnectedTeachers(id);
+    connectedTeachers.forEach((id) => {
+      this.socketSend('teacher', id, 'student-offline', { studentId: id });
+    });
   }
 
   private teacherOffline(id: string, client: WebSocket) {
@@ -42,13 +58,13 @@ export class WebsocketService {
     this.state.onlineClients.push({ id, role, client });
   }
 
-  clientOffline(client: WebSocket) {
+  async clientOffline(client: WebSocket) {
     const clientData = this.state.onlineClients.find(
       ({ client: originClient }) => originClient === client,
     );
     if (clientData) {
       if (clientData.role === 'student') {
-        this.studentOffline(clientData.id);
+        await this.studentOffline(clientData.id);
       } else {
         this.teacherOffline(clientData.id, client);
       }
@@ -59,7 +75,7 @@ export class WebsocketService {
     }
   }
 
-  studentOnline(id: string, client: WebSocket) {
+  async studentOnline(id: string, client: WebSocket) {
     const existentStudentData = findArrayElementById(
       this.state.onlineStudents,
       id,
@@ -72,6 +88,10 @@ export class WebsocketService {
     } else {
       this.state.onlineStudents.push({ id, client, connectCode });
     }
+    const connectedTeachers = await this.findStudentConnectedTeachers(id);
+    connectedTeachers.forEach((id) => {
+      this.socketSend('teacher', id, 'student-online', { studentId: id });
+    });
   }
 
   teacherOnline(id: string, client: WebSocket) {

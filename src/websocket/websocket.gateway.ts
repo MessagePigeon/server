@@ -17,20 +17,20 @@ export class WebsocketGateway implements OnGatewayDisconnect {
 
   @SubscribeMessage('online')
   @UseGuards(WebSocketAuthGuard)
-  handleOnline(
+  async handleOnline(
     @ConnectedSocket() client: WebSocket,
     @AuthUserId('ws') userId: string,
     @WsUserRole() role: 'student' | 'teacher',
   ) {
     this.websocketService.clientOnline(role, userId, client);
     if (role === 'student') {
-      this.websocketService.studentOnline(userId, client);
+      await this.websocketService.studentOnline(userId, client);
     } else {
       this.websocketService.teacherOnline(userId, client);
     }
   }
 
-  handleDisconnect(client: any) {
-    this.websocketService.clientOffline(client);
+  async handleDisconnect(client: any) {
+    await this.websocketService.clientOffline(client);
   }
 }
