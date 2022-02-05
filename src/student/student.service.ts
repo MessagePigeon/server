@@ -122,4 +122,27 @@ export class StudentService {
       studentId,
     });
   }
+
+  async findMessages(id: string, skip: number, take: number) {
+    const dbData = await this.db.message.findMany({
+      where: { students: { some: { id } } },
+      select: {
+        id: true,
+        createdAt: true,
+        message: true,
+        teacher: { select: { realName: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+    });
+    const data = dbData.map(({ teacher: { realName }, ...data }) => ({
+      ...data,
+      teacherName: realName,
+    }));
+    const total = await this.db.message.count({
+      where: { students: { some: { id } } },
+    });
+    return { data, total };
+  }
 }

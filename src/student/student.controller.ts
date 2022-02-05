@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Query,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { StudentAuthGuard } from '~/auth/guards/student-auth.guard';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
+import { PaginationDto } from '~/common/dto/pagination.dto';
 import { AnswerConnectRequestDto } from './dto/answer-connect-request.dto';
 import { CloseMessageDto } from './dto/close-message.dto';
 import { StudentLoginDto } from './dto/student-login.dto';
@@ -109,5 +111,15 @@ export class StudentController {
     } else {
       throw new HttpException('Message Id Not Found', HttpStatus.NOT_FOUND);
     }
+  }
+
+  @Get('messages')
+  @UseGuards(StudentAuthGuard)
+  @ApiBearerAuth('student')
+  async findMessages(
+    @AuthUserId() userId: string,
+    @Query(new ValidationPipe()) { skip, take }: PaginationDto,
+  ) {
+    return await this.studentService.findMessages(userId, +skip, +take);
   }
 }
