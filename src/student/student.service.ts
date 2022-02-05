@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { checkSetsEquality } from '~/common/utils/check-sets-equality.util';
 import { deleteArrayElementById } from '~/common/utils/delete-array-element-by-id.util';
 import { findArrayElementById } from '~/common/utils/find-array-element-by-id.util';
 import { PrismaService } from '~/prisma/prisma.service';
@@ -93,5 +94,28 @@ export class StudentService {
       select: { teachers: { select: { id: true, realName: true } } },
     });
     return data.map(({ id, realName }) => ({ id, name: realName }));
+  }
+
+  checkCloseMessagePermission(studentId: string, messageId: number) {
+    const { studentIds, closedStudentIds } = findArrayElementById(
+      this.state.showingMessages,
+      messageId,
+    );
+    return studentIds.has(studentId) && !closedStudentIds.has(studentId);
+  }
+
+  closeMessage(studentId: string, messageId: number) {
+    const { teacherId, studentIds, closedStudentIds } = findArrayElementById(
+      this.state.showingMessages,
+      messageId,
+    );
+    closedStudentIds.add(studentId);
+    const isAllStudentsClose = checkSetsEquality(studentIds, closedStudentIds);
+    if (isAllStudentsClose) {
+      deleteArrayElementById(this.state.showingMessages, messageId);
+    }
+    this.websocketService.socketSend('teacher', teacherId, 'message-close', {
+      studentId,
+    });
   }
 }

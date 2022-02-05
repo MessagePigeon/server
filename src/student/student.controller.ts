@@ -14,6 +14,7 @@ import { AuthService } from '~/auth/auth.service';
 import { StudentAuthGuard } from '~/auth/guards/student-auth.guard';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
 import { AnswerConnectRequestDto } from './dto/answer-connect-request.dto';
+import { CloseMessageDto } from './dto/close-message.dto';
 import { StudentLoginDto } from './dto/student-login.dto';
 import { StudentService } from './student.service';
 
@@ -90,5 +91,21 @@ export class StudentController {
   @ApiBearerAuth('student')
   async findTeachers(@AuthUserId() userId: string) {
     return await this.studentService.findTeachers(userId);
+  }
+
+  @Post('message-close')
+  @UseGuards(StudentAuthGuard)
+  @ApiBearerAuth('student')
+  closeMessage(
+    @AuthUserId() userId: string,
+    @Body(new ValidationPipe()) { messageId }: CloseMessageDto,
+  ) {
+    const isAllowCloseMessage = this.studentService.checkCloseMessagePermission(
+      userId,
+      messageId,
+    );
+    if (isAllowCloseMessage) {
+      return this.studentService.closeMessage(userId, messageId);
+    }
   }
 }
