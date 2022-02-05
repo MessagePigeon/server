@@ -44,11 +44,13 @@ export class WebsocketService {
     return teachers.map(({ id }) => id);
   }
 
-  private async studentOffline(id: string) {
-    deleteArrayElementById(this.state.onlineStudents, id);
-    const connectedTeachers = await this.findStudentConnectedTeachers(id);
+  private async studentOffline(studentId: string) {
+    deleteArrayElementById(this.state.onlineStudents, studentId);
+    const connectedTeachers = await this.findStudentConnectedTeachers(
+      studentId,
+    );
     connectedTeachers.forEach((id) => {
-      this.socketSend('teacher', id, 'student-offline', { studentId: id });
+      this.socketSend('teacher', id, 'student-offline', { studentId });
     });
   }
 
@@ -82,22 +84,24 @@ export class WebsocketService {
     }
   }
 
-  async studentOnline(id: string, client: WebSocket) {
+  async studentOnline(studentId: string, client: WebSocket) {
     const existentStudentData = findArrayElementById(
       this.state.onlineStudents,
-      id,
+      studentId,
     );
     const connectCode = generateRandomString(6);
     if (existentStudentData) {
-      this.socketSend('student', id, 'logout');
+      this.socketSend('student', studentId, 'logout');
       this.clientOffline(existentStudentData.client);
-      this.state.onlineStudents.push({ id, client, connectCode });
+      this.state.onlineStudents.push({ id: studentId, client, connectCode });
     } else {
-      this.state.onlineStudents.push({ id, client, connectCode });
+      this.state.onlineStudents.push({ id: studentId, client, connectCode });
     }
-    const connectedTeachers = await this.findStudentConnectedTeachers(id);
+    const connectedTeachers = await this.findStudentConnectedTeachers(
+      studentId,
+    );
     connectedTeachers.forEach((id) => {
-      this.socketSend('teacher', id, 'student-online', { studentId: id });
+      this.socketSend('teacher', id, 'student-online', { studentId });
     });
   }
 
