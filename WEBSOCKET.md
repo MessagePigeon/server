@@ -46,3 +46,4 @@ After login, send this to server
 | accept-connect-request | student accept connect | `{ studentId }` |
 | student-online         | /                      | `{ studentId }` |
 | student-offline        | /                      | `{ studentId }` |
+| message-close          | close the message      | `{ studentId }` |
