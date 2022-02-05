@@ -177,6 +177,7 @@ export class AdminController {
   }
 
   @Post('disconnection')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth('admin')
   async makeDisconnection(
