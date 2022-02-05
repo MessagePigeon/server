@@ -20,6 +20,7 @@ import { generateRandomString } from '~/common/utils/generate-random-string.util
 import { StudentService } from '~/student/student.service';
 import { TeacherService } from '~/teacher/teacher.service';
 import { AdminService } from './admin.service';
+import { FindMessagesDto } from './dto/find-messages.dto';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
 import { GenerateStudentDto } from './dto/generate-student.dto';
@@ -182,5 +183,20 @@ export class AdminController {
     @Body(new ValidationPipe()) { studentId, teacherId }: ModifyConnectionDto,
   ) {
     return await this.adminService.makeDisconnection(studentId, teacherId);
+  }
+
+  @Get('messages')
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
+  async findMessages(
+    @Query(new ValidationPipe())
+    { skip, take, studentId, teacherId }: FindMessagesDto,
+  ) {
+    return await this.adminService.findMessages(
+      +skip,
+      +take,
+      teacherId,
+      studentId,
+    );
   }
 }

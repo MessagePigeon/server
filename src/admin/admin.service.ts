@@ -179,4 +179,35 @@ export class AdminService {
     );
     return { studentId, teacherId };
   }
+
+  async findMessages(
+    skip: number,
+    take: number,
+    teacherId?: string,
+    studentId?: string,
+  ) {
+    const count = await this.db.message.count({
+      where: {
+        teacherId: teacherId ? teacherId : undefined,
+        students: studentId ? { some: { id: studentId } } : undefined,
+      },
+    });
+    const data = await this.db.message.findMany({
+      skip,
+      take,
+      orderBy: { createdAt: 'desc' },
+      where: {
+        teacherId: teacherId ? teacherId : undefined,
+        students: studentId ? { some: { id: studentId } } : undefined,
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        message: true,
+        teacher: { select: { id: true, realName: true } },
+        students: { select: { id: true, defaultRemark: true } },
+      },
+    });
+    return { data, count };
+  }
 }
