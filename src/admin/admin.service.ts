@@ -137,4 +137,31 @@ export class AdminService {
   async modifyStudent(id: string, data: Partial<Omit<ModifyStudentDto, 'id'>>) {
     return await this.db.student.update({ where: { id }, data });
   }
+
+  async makeConnection(studentId: string, teacherId: string) {
+    const { defaultRemark } = await this.db.student.update({
+      where: { id: studentId },
+      data: { teachers: { connect: { id: teacherId } } },
+      select: { defaultRemark: true },
+    });
+    await this.db.studentRemark.create({
+      data: {
+        remark: defaultRemark,
+        teacher: { connect: { id: teacherId } },
+        student: { connect: { id: studentId } },
+      },
+    });
+    return { defaultRemark, studentId, teacherId };
+  }
+
+  async makeDisconnection(studentId: string, teacherId: string) {
+    await this.db.student.update({
+      where: { id: studentId },
+      data: { teachers: { disconnect: { id: teacherId } } },
+    });
+    await this.db.studentRemark.delete({
+      where: { teacherId_studentId: { teacherId, studentId } },
+    });
+    return { studentId, teacherId };
+  }
 }

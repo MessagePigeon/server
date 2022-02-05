@@ -25,6 +25,7 @@ import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
 import { GenerateStudentDto } from './dto/generate-student.dto';
 import { GenerateTeacherDto } from './dto/generate-teacher.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
+import { ModifyConnectionDto } from './dto/modify-connection.dto';
 import { ModifyStudentDto } from './dto/modify-student.dto';
 import { ModifyTeacherRealNameDto } from './dto/modify-teacher-real-name.dto';
 import { ResetTeacherPasswordDto } from './dto/reset-teacher-password.dto';
@@ -163,5 +164,23 @@ export class AdminController {
     @Body(new ValidationPipe()) { id, ...data }: ModifyStudentDto,
   ) {
     return await this.adminService.modifyStudent(id, data);
+  }
+
+  @Post('connection')
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
+  async makeConnection(
+    @Body(new ValidationPipe()) { studentId, teacherId }: ModifyConnectionDto,
+  ) {
+    return await this.adminService.makeConnection(studentId, teacherId);
+  }
+
+  @Post('disconnection')
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
+  async makeDisconnection(
+    @Body(new ValidationPipe()) { studentId, teacherId }: ModifyConnectionDto,
+  ) {
+    return await this.adminService.makeDisconnection(studentId, teacherId);
   }
 }
