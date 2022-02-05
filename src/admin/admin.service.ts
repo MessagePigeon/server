@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { signHashPassword } from '~/common/utils/hash-password.util';
 import { PrismaService } from '~/prisma/prisma.service';
+import { StateService } from '~/state/state.service';
 import { ModifyStudentDto } from './dto/modify-student.dto';
 
 @Injectable()
@@ -10,6 +11,7 @@ export class AdminService {
   constructor(
     private readonly db: PrismaService,
     private readonly configService: ConfigService,
+    private readonly state: StateService,
   ) {}
 
   async generateTeacherRegisterCodes(count: number) {
@@ -72,12 +74,23 @@ export class AdminService {
   }
 
   async findTeachers(skip: number, take: number) {
-    const data = await this.db.teacher.findMany({
-      select: { id: true, username: true, realName: true },
+    const dbData = await this.db.teacher.findMany({
+      select: {
+        id: true,
+        username: true,
+        realName: true,
+        students: { select: { id: true, defaultRemark: true } },
+      },
       skip,
       take,
       orderBy: { createdAt: 'desc' },
     });
+    const onlineTeachersId = this.state.onlineTeachers.map(({ id }) => id);
+    const data = dbData.map(({ id, ...data }) => ({
+      id,
+      ...data,
+      online: onlineTeachersId.includes(id),
+    }));
     const total = await this.db.teacher.count();
     return { data, total };
   }
@@ -100,12 +113,23 @@ export class AdminService {
   }
 
   async findStudents(skip: number, take: number) {
-    const data = await this.db.student.findMany({
-      select: { id: true, key: true, defaultRemark: true },
+    const dbData = await this.db.student.findMany({
+      select: {
+        id: true,
+        key: true,
+        defaultRemark: true,
+        teachers: { select: { id: true, realName: true } },
+      },
       orderBy: { createdAt: 'desc' },
       skip,
       take,
     });
+    const onlineStudentIds = this.state.onlineStudents.map(({ id }) => id);
+    const data = dbData.map(({ id, ...data }) => ({
+      id,
+      ...data,
+      online: onlineStudentIds.includes(id),
+    }));
     const total = await this.db.student.count();
     return { data, total };
   }
