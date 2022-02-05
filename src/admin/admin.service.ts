@@ -4,6 +4,7 @@ import { generateRandomString } from '~/common/utils/generate-random-string.util
 import { signHashPassword } from '~/common/utils/hash-password.util';
 import { PrismaService } from '~/prisma/prisma.service';
 import { StateService } from '~/state/state.service';
+import { WebsocketService } from '~/websocket/websocket.service';
 import { ModifyStudentDto } from './dto/modify-student.dto';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class AdminService {
     private readonly db: PrismaService,
     private readonly configService: ConfigService,
     private readonly state: StateService,
+    private readonly websocketService: WebsocketService,
   ) {}
 
   async generateTeacherRegisterCodes(count: number) {
@@ -144,12 +146,19 @@ export class AdminService {
       data: { teachers: { connect: { id: teacherId } } },
       select: { defaultRemark: true },
     });
-    await this.db.studentRemark.create({
+    const {
+      teacher: { realName: teacherName },
+    } = await this.db.studentRemark.create({
       data: {
         remark: defaultRemark,
         teacher: { connect: { id: teacherId } },
         student: { connect: { id: studentId } },
       },
+      select: { teacher: { select: { realName: true } } },
+    });
+    this.websocketService.socketSend('student', studentId, 'teacher-connect', {
+      teacherId,
+      teacherName,
     });
     return { defaultRemark, studentId, teacherId };
   }
@@ -162,6 +171,12 @@ export class AdminService {
     await this.db.studentRemark.delete({
       where: { teacherId_studentId: { teacherId, studentId } },
     });
+    this.websocketService.socketSend(
+      'student',
+      studentId,
+      'teacher-disconnect',
+      { teacherId },
+    );
     return { studentId, teacherId };
   }
 }

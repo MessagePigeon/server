@@ -5,6 +5,7 @@ import { PrismaModule } from '~/prisma/prisma.module';
 import { StateModule } from '~/state/state.module';
 import { StudentModule } from '~/student/student.module';
 import { TeacherModule } from '~/teacher/teacher.module';
+import { WebsocketModule } from '~/websocket/websocket.module';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 
@@ -16,6 +17,7 @@ import { AdminService } from './admin.service';
     StudentModule,
     StateModule,
     PrismaModule,
+    WebsocketModule,
   ],
   controllers: [AdminController],
   providers: [AdminService],
