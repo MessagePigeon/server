@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Patch,
   Post,
+  Query,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { TeacherAuthGuard } from '~/auth/guards/teacher-auth.guard';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
+import { PaginationDto } from '~/common/dto/pagination.dto';
 import { ConnectStudentDto } from './dto/connect-student.dto';
 import { DeleteStudentDto } from './dto/delete-student.dto';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
@@ -193,5 +195,15 @@ export class TeacherController {
     { studentId }: DeleteStudentDto,
   ) {
     return await this.teacherService.deleteStudent(userId, studentId);
+  }
+
+  @Get('messages')
+  @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
+  async findMessages(
+    @AuthUserId() userId: string,
+    @Query(new ValidationPipe()) { skip, take }: PaginationDto,
+  ) {
+    return await this.teacherService.findMessages(userId, +skip, +take);
   }
 }

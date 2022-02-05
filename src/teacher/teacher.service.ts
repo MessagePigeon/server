@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { nanoid } from 'nanoid';
+import { findArrayElementById } from '~/common/utils/find-array-element-by-id.util';
 import {
   signHashPassword,
   verifyHashPassword,
@@ -209,5 +210,45 @@ export class TeacherService {
       'teacher-disconnect',
       { teacherId },
     );
+  }
+
+  async findMessages(teacherId: string, skip: number, take: number) {
+    const total = await this.db.message.count({
+      where: { teacher: { id: teacherId } },
+    });
+
+    const dbOriginData = await this.db.message.findMany({
+      where: { teacher: { id: teacherId } },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        createdAt: true,
+        message: true,
+        students: { select: { id: true } },
+      },
+      skip,
+      take,
+    });
+
+    const dbData = dbOriginData.map(({ students, ...data }) => ({
+      ...data,
+      studentIds: students.map(({ id }) => id),
+    }));
+
+    const data = dbData.map(({ id, ...data }) => {
+      const showingIds: string[] = [];
+      const messageState = findArrayElementById(this.state.showingMessages, id);
+      if (messageState) {
+        const { studentIds, closedStudentIds } = messageState;
+        studentIds.forEach((id) => {
+          if (!closedStudentIds.has(id)) {
+            showingIds.push(id);
+          }
+        });
+      }
+      return { id, ...data, showingIds };
+    });
+
+    return { data, total };
   }
 }
