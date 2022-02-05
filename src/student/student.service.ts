@@ -97,11 +97,15 @@ export class StudentService {
   }
 
   checkCloseMessagePermission(studentId: string, messageId: number) {
-    const { studentIds, closedStudentIds } = findArrayElementById(
-      this.state.showingMessages,
-      messageId,
-    );
-    return studentIds.has(studentId) && !closedStudentIds.has(studentId);
+    const message = findArrayElementById(this.state.showingMessages, messageId);
+    if (message) {
+      return (
+        message.studentIds.has(studentId) &&
+        !message.closedStudentIds.has(studentId)
+      );
+    } else {
+      return false;
+    }
   }
 
   closeMessage(studentId: string, messageId: number) {

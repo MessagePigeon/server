@@ -106,6 +106,8 @@ export class StudentController {
     );
     if (isAllowCloseMessage) {
       return this.studentService.closeMessage(userId, messageId);
+    } else {
+      throw new HttpException('Message Id Not Found', HttpStatus.NOT_FOUND);
     }
   }
 }
