@@ -183,42 +183,22 @@ export class TeacherService {
     return { messageId, createdAt, message, studentIds };
   }
 
-  private async findRemarkIdByTeacherAndStudent(
-    teacherId: string,
-    studentId: string,
-  ) {
-    const { studentRemarks: studentRemarksData } =
-      await this.db.teacher.findUnique({
-        where: { id: teacherId },
-        select: {
-          studentRemarks: { where: { studentId }, select: { id: true } },
-        },
-      });
-    return studentRemarksData.at(0).id;
-  }
-
   async modifyStudentRemark(
     teacherId: string,
     studentId: string,
     remark: string,
   ) {
-    const remarkId = await this.findRemarkIdByTeacherAndStudent(
-      teacherId,
-      studentId,
-    );
-    return await this.db.studentRemark.update({
-      where: { id: remarkId },
+    await this.db.studentRemark.update({
+      where: { teacherId_studentId: { teacherId, studentId } },
       data: { remark },
-      select: { id: true, remark: true },
     });
+    return { studentId, remark };
   }
 
   async deleteStudent(teacherId: string, studentId: string) {
-    const remarkId = await this.findRemarkIdByTeacherAndStudent(
-      teacherId,
-      studentId,
-    );
-    await this.db.studentRemark.delete({ where: { id: remarkId } });
+    await this.db.studentRemark.delete({
+      where: { teacherId_studentId: { teacherId, studentId } },
+    });
     await this.db.teacher.update({
       where: { id: teacherId },
       data: { students: { disconnect: { id: studentId } } },

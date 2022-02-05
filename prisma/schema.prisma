@@ -51,6 +51,8 @@ model StudentRemark {
   student   Student @relation(fields: [studentId], references: [id])
   teacherId String
   studentId String
+
+  @@unique([teacherId, studentId])
 }
 
 model Message {
