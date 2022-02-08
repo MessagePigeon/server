@@ -67,10 +67,10 @@ export class StudentService {
       this.state.connectRequests,
       requestId,
     );
-    const { realName: teacherName } = await this.db.teacher.update({
+    const { name: teacherName } = await this.db.teacher.update({
       where: { id: teacherId },
       data: { students: { connect: { id: studentId } } },
-      select: { realName: true },
+      select: { name: true },
     });
     await this.db.studentRemark.create({
       data: {
@@ -91,9 +91,9 @@ export class StudentService {
   async findTeachers(id: string) {
     const { teachers: data } = await this.db.student.findUnique({
       where: { id },
-      select: { teachers: { select: { id: true, realName: true } } },
+      select: { teachers: { select: { id: true, name: true } } },
     });
-    return data.map(({ id, realName }) => ({ id, name: realName }));
+    return data.map(({ id, name }) => ({ id, name: name }));
   }
 
   checkCloseMessagePermission(studentId: string, messageId: number) {
@@ -130,15 +130,15 @@ export class StudentService {
         id: true,
         createdAt: true,
         message: true,
-        teacher: { select: { realName: true } },
+        teacher: { select: { name: true } },
       },
       orderBy: { createdAt: 'desc' },
       skip,
       take,
     });
-    const data = dbData.map(({ teacher: { realName }, ...data }) => ({
+    const data = dbData.map(({ teacher: { name }, ...data }) => ({
       ...data,
-      teacherName: realName,
+      teacherName: name,
     }));
     const total = await this.db.message.count({
       where: { students: { some: { id } } },

@@ -21,7 +21,7 @@ import { ConnectStudentDto } from './dto/connect-student.dto';
 import { DeleteStudentDto } from './dto/delete-student.dto';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
 import { ModifyPasswordDto } from './dto/modify-password.dto';
-import { modifyRealNameDto } from './dto/modify-real-name.dto';
+import { modifyNameDto } from './dto/modify-name.dto';
 import { ModifyStudentRemarkDto } from './dto/modify-student-remark.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { SendMessageDto } from './dto/send-message.dto';
@@ -38,7 +38,7 @@ export class TeacherController {
   @Post('register')
   async register(
     @Body(new ValidationPipe())
-    { registerCode, username, password, realName }: RegisterTeacherDto,
+    { registerCode, username, password, name }: RegisterTeacherDto,
   ) {
     const isRegisterCodeStatusValid =
       await this.teacherService.checkRegisterCodeValid(registerCode);
@@ -48,7 +48,7 @@ export class TeacherController {
       );
       if (!isUsernameRepeated) {
         await this.teacherService.updateRegisterCode(registerCode);
-        return await this.teacherService.create(username, password, realName);
+        return await this.teacherService.create(username, password, name);
       } else {
         throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
       }
@@ -92,14 +92,14 @@ export class TeacherController {
     return await this.teacherService.init(userId);
   }
 
-  @Patch('real-name')
+  @Patch('name')
   @UseGuards(TeacherAuthGuard)
   @ApiBearerAuth('teacher')
-  async modifyRealName(
+  async modifyName(
     @AuthUserId() userId: string,
-    @Body(new ValidationPipe()) { newRealName }: modifyRealNameDto,
+    @Body(new ValidationPipe()) { newName }: modifyNameDto,
   ) {
-    return await this.teacherService.modifyRealName(userId, newRealName);
+    return await this.teacherService.modifyName(userId, newName);
   }
 
   @Patch('password')

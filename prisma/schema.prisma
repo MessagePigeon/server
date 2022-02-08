@@ -19,7 +19,7 @@ model Teacher {
   createdAt DateTime @default(now())
 
   username String @unique
-  realName String
+  name     String
   password String
 
   students       Student[]

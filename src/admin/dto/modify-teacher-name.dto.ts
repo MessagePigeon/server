@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
-export class ModifyTeacherRealNameDto {
+export class ModifyTeacherNameDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsUUID()
@@ -10,5 +10,5 @@ export class ModifyTeacherRealNameDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  newRealName: string;
+  newName: string;
 }

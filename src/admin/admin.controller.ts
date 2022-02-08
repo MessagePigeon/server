@@ -28,7 +28,7 @@ import { GenerateTeacherDto } from './dto/generate-teacher.dto';
 import { LoginAdminDto } from './dto/login-admin.dto';
 import { ModifyConnectionDto } from './dto/modify-connection.dto';
 import { ModifyStudentDto } from './dto/modify-student.dto';
-import { ModifyTeacherRealNameDto } from './dto/modify-teacher-real-name.dto';
+import { ModifyTeacherNameDto } from './dto/modify-teacher-name.dto';
 import { ResetTeacherPasswordDto } from './dto/reset-teacher-password.dto';
 
 @Controller('admin')
@@ -91,13 +91,13 @@ export class AdminController {
   @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Generate teacher with random password' })
   async generateTeacher(
-    @Body(new ValidationPipe()) { username, realName }: GenerateTeacherDto,
+    @Body(new ValidationPipe()) { username, name }: GenerateTeacherDto,
   ) {
     const isUsernameRepeated = await this.teacherService.checkUsernameExist(
       username,
     );
     if (!isUsernameRepeated) {
-      return await this.adminService.generateTeacher(username, realName);
+      return await this.adminService.generateTeacher(username, name);
     } else {
       throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
     }
@@ -112,13 +112,13 @@ export class AdminController {
     return await this.adminService.findTeachers(+skip, +take);
   }
 
-  @Patch('teacher/real-name')
+  @Patch('teacher/name')
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth('admin')
-  async modifyTeacherRealName(
-    @Body(new ValidationPipe()) { id, newRealName }: ModifyTeacherRealNameDto,
+  async modifyTeacherName(
+    @Body(new ValidationPipe()) { id, newName }: ModifyTeacherNameDto,
   ) {
-    return await this.teacherService.modifyRealName(id, newRealName);
+    return await this.teacherService.modifyName(id, newName);
   }
 
   @Patch('teacher/password')

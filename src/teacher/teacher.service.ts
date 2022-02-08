@@ -43,14 +43,14 @@ export class TeacherService {
     });
   }
 
-  async create(username: string, password: string, realName: string) {
+  async create(username: string, password: string, name: string) {
     return await this.db.teacher.create({
       data: {
         username,
         password: await signHashPassword(password),
-        realName,
+        name,
       },
-      select: { username: true, realName: true },
+      select: { username: true, name: true },
     });
   }
 
@@ -76,11 +76,11 @@ export class TeacherService {
     return info;
   }
 
-  async modifyRealName(id: string, newRealName: string) {
+  async modifyName(id: string, newName: string) {
     return await this.db.teacher.update({
       where: { id },
-      data: { realName: newRealName },
-      select: { username: true, realName: true },
+      data: { name: newName },
+      select: { username: true, name: true },
     });
   }
 
@@ -119,9 +119,9 @@ export class TeacherService {
       studentId: student.id,
       remark,
     });
-    const { realName: teacherName } = await this.db.teacher.findUnique({
+    const { name: teacherName } = await this.db.teacher.findUnique({
       where: { id: teacherId },
-      select: { realName: true },
+      select: { name: true },
     });
     this.websocketService.socketSend('student', student.id, 'connect-request', {
       requestId,
@@ -152,7 +152,7 @@ export class TeacherService {
     const {
       id: messageId,
       createdAt,
-      teacher: { realName: teacherName },
+      teacher: { name: teacherName },
     } = await this.db.message.create({
       data: {
         message,
@@ -162,7 +162,7 @@ export class TeacherService {
       select: {
         id: true,
         createdAt: true,
-        teacher: { select: { realName: true } },
+        teacher: { select: { name: true } },
       },
     });
     this.state.showingMessages.push({

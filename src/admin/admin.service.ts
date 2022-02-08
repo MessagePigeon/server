@@ -66,13 +66,13 @@ export class AdminService {
     return isPasswordValid;
   }
 
-  async generateTeacher(username: string, realName: string) {
+  async generateTeacher(username: string, name: string) {
     const password = generateRandomString(8);
     const { id } = await this.db.teacher.create({
-      data: { username, password: await signHashPassword(password), realName },
+      data: { username, password: await signHashPassword(password), name },
       select: { id: true },
     });
-    return { id, username, password, realName };
+    return { id, username, password, name };
   }
 
   async findTeachers(skip: number, take: number) {
@@ -80,7 +80,7 @@ export class AdminService {
       select: {
         id: true,
         username: true,
-        realName: true,
+        name: true,
         students: { select: { id: true, defaultRemark: true } },
       },
       skip,
@@ -120,7 +120,7 @@ export class AdminService {
         id: true,
         key: true,
         defaultRemark: true,
-        teachers: { select: { id: true, realName: true } },
+        teachers: { select: { id: true, name: true } },
       },
       orderBy: { createdAt: 'desc' },
       skip,
@@ -147,14 +147,14 @@ export class AdminService {
       select: { defaultRemark: true },
     });
     const {
-      teacher: { realName: teacherName },
+      teacher: { name: teacherName },
     } = await this.db.studentRemark.create({
       data: {
         remark: defaultRemark,
         teacher: { connect: { id: teacherId } },
         student: { connect: { id: studentId } },
       },
-      select: { teacher: { select: { realName: true } } },
+      select: { teacher: { select: { name: true } } },
     });
     this.websocketService.socketSend('student', studentId, 'teacher-connect', {
       teacherId,
@@ -204,7 +204,7 @@ export class AdminService {
         id: true,
         createdAt: true,
         message: true,
-        teacher: { select: { id: true, realName: true } },
+        teacher: { select: { id: true, name: true } },
         students: { select: { id: true, defaultRemark: true } },
       },
     });
