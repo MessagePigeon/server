@@ -54,7 +54,7 @@ export class TeacherController {
       }
     } else {
       throw new HttpException(
-        'Register Code Not Valid',
+        'Register Code Not Found',
         HttpStatus.UNAUTHORIZED,
       );
     }
