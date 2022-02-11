@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   ArrayNotEmpty,
   ArrayUnique,
-  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsString,
@@ -22,10 +21,10 @@ export class SendMessageDto {
   @IsString()
   message: string;
 
-  @ApiProperty({ description: 'text to speech' })
+  @ApiProperty({ description: 'text to speech repeat times' })
   @IsNotEmpty()
-  @IsBoolean()
-  tts: boolean;
+  @IsNumber()
+  tts: number;
 
   @ApiProperty({
     description:

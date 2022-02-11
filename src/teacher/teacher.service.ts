@@ -146,7 +146,7 @@ export class TeacherService {
     teacherId: string,
     studentIds: string[],
     message: string,
-    tts: boolean,
+    tts: number,
     closeDelay: number,
   ) {
     const {
