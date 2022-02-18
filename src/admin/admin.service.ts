@@ -27,9 +27,7 @@ export class AdminService {
     } else {
       const largestIdData = await this.db.registerCode.findFirst({
         select: { id: true },
-        orderBy: {
-          id: 'desc',
-        },
+        orderBy: { id: 'desc' },
       });
       const largestId = largestIdData === null ? 0 : largestIdData.id;
 
@@ -53,11 +51,11 @@ export class AdminService {
       where: used === undefined ? undefined : { used },
       skip,
       take,
-      orderBy: {
-        id: 'desc',
-      },
+      orderBy: { id: 'desc' },
     });
-    const total = await this.db.registerCode.count();
+    const total = await this.db.registerCode.count({
+      where: used === undefined ? undefined : { used },
+    });
     return { data, total };
   }
 
