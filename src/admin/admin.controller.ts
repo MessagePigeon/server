@@ -191,13 +191,15 @@ export class AdminController {
   @ApiBearerAuth('admin')
   async findMessages(
     @Query(new ValidationPipe())
-    { skip, take, studentId, teacherId }: FindMessagesDto,
+    { skip, take, studentId, teacherId, startTime, endTime }: FindMessagesDto,
   ) {
     return await this.adminService.findMessages(
       +skip,
       +take,
       teacherId,
       studentId,
+      startTime,
+      endTime,
     );
   }
 }

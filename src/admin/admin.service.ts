@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Prisma } from '@prisma/client';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { signHashPassword } from '~/common/utils/hash-password.util';
 import { PrismaService } from '~/prisma/prisma.service';
@@ -185,21 +186,23 @@ export class AdminService {
     take: number,
     teacherId?: string,
     studentId?: string,
+    startTime?: string,
+    endTime?: string,
   ) {
-    const count = await this.db.message.count({
-      where: {
-        teacherId: teacherId ? teacherId : undefined,
-        students: studentId ? { some: { id: studentId } } : undefined,
+    const where: Prisma.MessageWhereInput = {
+      teacherId: teacherId ? teacherId : undefined,
+      students: studentId ? { some: { id: studentId } } : undefined,
+      createdAt: {
+        gte: startTime ? startTime : undefined,
+        lte: endTime ? endTime : undefined,
       },
-    });
+    };
+    const count = await this.db.message.count({ where });
     const data = await this.db.message.findMany({
       skip,
       take,
       orderBy: { createdAt: 'desc' },
-      where: {
-        teacherId: teacherId ? teacherId : undefined,
-        students: studentId ? { some: { id: studentId } } : undefined,
-      },
+      where,
       select: {
         id: true,
         createdAt: true,
