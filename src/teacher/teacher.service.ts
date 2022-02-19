@@ -136,8 +136,9 @@ export class TeacherService {
       orderBy: { createdAt: 'desc' },
       select: { studentId: true, remark: true },
     });
-    return dbData.map((data) => ({
-      online: this.state.onlineStudents.some(({ id }) => id === data.studentId),
+    return dbData.map(({ studentId, ...data }) => ({
+      online: this.state.onlineStudents.some(({ id }) => id === studentId),
+      id: studentId,
       ...data,
     }));
   }
