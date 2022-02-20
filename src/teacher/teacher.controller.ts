@@ -191,7 +191,7 @@ export class TeacherController {
   @ApiBearerAuth('teacher')
   async deleteStudent(
     @AuthUserId() userId: string,
-    @Body(new ValidationPipe())
+    @Query(new ValidationPipe())
     { studentId }: DeleteStudentDto,
   ) {
     return await this.teacherService.deleteStudent(userId, studentId);
