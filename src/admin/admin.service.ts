@@ -48,13 +48,13 @@ export class AdminService {
   async findTeacherRegisterCode(skip: number, take: number, used?: boolean) {
     const data = await this.db.registerCode.findMany({
       select: { id: true, code: true, used: used === undefined },
-      where: used === undefined ? undefined : { used },
+      where: { used },
       skip,
       take,
       orderBy: { id: 'desc' },
     });
     const total = await this.db.registerCode.count({
-      where: used === undefined ? undefined : { used },
+      where: { used },
     });
     return { data, total };
   }
@@ -188,11 +188,11 @@ export class AdminService {
     endTime?: string,
   ) {
     const where: Prisma.MessageWhereInput = {
-      teacherId: teacherId ? teacherId : undefined,
-      students: studentId ? { some: { id: studentId } } : undefined,
+      teacherId: teacherId,
+      students: { some: { id: studentId } },
       createdAt: {
-        gte: startTime ? startTime : undefined,
-        lte: endTime ? endTime : undefined,
+        gte: startTime,
+        lte: endTime,
       },
     };
     const count = await this.db.message.count({ where });
