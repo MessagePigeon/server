@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { checkSetsEquality } from '~/common/utils/check-sets-equality.util';
 import { deleteArrayElementById } from '~/common/utils/delete-array-element-by-id.util';
 import { findArrayElementById } from '~/common/utils/find-array-element-by-id.util';
@@ -123,9 +124,20 @@ export class StudentService {
     });
   }
 
-  async findMessages(id: string, skip: number, take: number) {
+  async findMessages(
+    id: string,
+    skip: number,
+    take: number,
+    teacherId?: string,
+    content?: string,
+  ) {
+    const where: Prisma.MessageWhereInput = {
+      students: { some: { id } },
+      teacher: { id: teacherId },
+      message: { contains: content },
+    };
     const dbData = await this.db.message.findMany({
-      where: { students: { some: { id } } },
+      where,
       select: {
         id: true,
         createdAt: true,
@@ -140,9 +152,7 @@ export class StudentService {
       ...data,
       teacherName: name,
     }));
-    const total = await this.db.message.count({
-      where: { students: { some: { id } } },
-    });
+    const total = await this.db.message.count({ where });
     return { data, total };
   }
 }
