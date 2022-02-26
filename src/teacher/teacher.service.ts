@@ -127,7 +127,7 @@ export class TeacherService {
       requestId,
       teacherName,
     });
-    return { studentId: student.id, requestId, remark };
+    return { requestId, remark };
   }
 
   async findStudents(id: string) {
