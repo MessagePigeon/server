@@ -13,13 +13,29 @@ export class TasksService {
    * Cleanup connect request which created more than 3 hours every day midnight
    */
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  cleanUpConnectRequests() {
+  cleanupConnectRequests() {
     this.state.connectRequests.forEach(({ id, createdAt }, index) => {
       if (isTimeToNowGte(createdAt, '3h')) {
         this.state.connectRequests.splice(index, 1);
         const timeoutInterval = formatTimeToNow(createdAt);
         this.logger.warn(
           `Cleanup connect request ${id} which created ${timeoutInterval}`,
+        );
+      }
+    });
+  }
+
+  /**
+   * Cleanup message state which created more than 12 hours every day midnight
+   */
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  cleanupShowingMessages() {
+    this.state.showingMessages.forEach(({ id, createdAt }, index) => {
+      if (isTimeToNowGte(createdAt, '12h')) {
+        this.state.showingMessages.splice(index, 1);
+        const timeoutInterval = formatTimeToNow(createdAt);
+        this.logger.warn(
+          `Cleanup message state id:${id} which created ${timeoutInterval}`,
         );
       }
     });

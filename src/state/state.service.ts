@@ -24,6 +24,7 @@ export type showingMessage = {
   teacherId: string;
   studentIds: Set<string>;
   closedStudentIds: Set<string>;
+  createdAt: Date;
 };
 
 @Injectable()

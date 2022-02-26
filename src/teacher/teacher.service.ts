@@ -172,6 +172,7 @@ export class TeacherService {
       teacherId,
       studentIds: new Set(studentIds),
       closedStudentIds: new Set(),
+      createdAt,
     });
     studentIds.forEach((id) => {
       this.websocketService.socketSend('student', id, 'message', {
