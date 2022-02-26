@@ -118,6 +118,7 @@ export class TeacherService {
       teacherId,
       studentId: student.id,
       remark,
+      createdAt: new Date(),
     });
     const { name: teacherName } = await this.db.teacher.findUnique({
       where: { id: teacherId },

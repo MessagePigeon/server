@@ -17,6 +17,7 @@ export type connectRequest = {
   teacherId: string;
   studentId: string;
   remark: string;
+  createdAt: Date;
 };
 export type showingMessage = {
   id: number;
