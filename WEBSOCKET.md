@@ -31,20 +31,20 @@ After login, send this to server
 
 ### Student
 
-| Event              | Description                          | Data                                                   |
-| ------------------ | ------------------------------------ | ------------------------------------------------------ |
-| logout             | caused by duplicate login            | /                                                      |
-| connect-request    | teacher want to connect this student | `{ requestId, teacherName }`                           |
-| message            | message sent by teacher              | `{ messageId, message, teacherName, tts, closeDelay }` |
-| teacher-disconnect | /                                    | `{ teacherId }`                                        |
-| teacher-connect    | connect by admin forcibly            | `{ teacherId, teacherName }`                           |
+| Event              | Description                          | Data                                                                                           |
+| ------------------ | ------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| logout             | caused by duplicate login            | /                                                                                              |
+| connect-request    | teacher want to connect this student | `{ requestId: string, teacherName: string }`                                                   |
+| message            | message sent by teacher              | `{ messageId: number, message: string, teacherName: string, tts: number, closeDelay: number }` |
+| teacher-disconnect | /                                    | `{ teacherId: string }`                                                                        |
+| teacher-connect    | connect by admin forcibly            | `{ teacherId: string, teacherName: string }`                                                   |
 
 ### Teacher
 
-| Event                  | Description            | Data                       |
-| ---------------------- | ---------------------- | -------------------------- |
-| reject-connect-request | student reject connect | `{ requestId }`            |
-| accept-connect-request | student accept connect | `{ requestId }`            |
-| student-online         | /                      | `{ studentId }`            |
-| student-offline        | /                      | `{ studentId }`            |
-| message-close          | close the message      | `{ messageId, studentId }` |
+| Event                  | Description            | Data                                       |
+| ---------------------- | ---------------------- | ------------------------------------------ |
+| reject-connect-request | student reject connect | `{ requestId: string }`                    |
+| accept-connect-request | student accept connect | `{ requestId: string }`                    |
+| student-online         | /                      | `{ studentId: string }`                    |
+| student-offline        | /                      | `{ studentId: string }`                    |
+| message-close          | close the message      | `{ messageId: number, studentId: string }` |
