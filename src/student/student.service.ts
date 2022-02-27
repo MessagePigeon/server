@@ -51,7 +51,7 @@ export class StudentService {
 
   rejectTeacherConnectRequest(requestId: string) {
     deleteArrayElementById(this.state.connectRequests, requestId);
-    const { studentId, teacherId } = findArrayElementById(
+    const { teacherId } = findArrayElementById(
       this.state.connectRequests,
       requestId,
     );
@@ -59,7 +59,7 @@ export class StudentService {
       'teacher',
       teacherId,
       'reject-connect-request',
-      { studentId },
+      { requestId },
     );
   }
 
@@ -84,7 +84,7 @@ export class StudentService {
       'teacher',
       teacherId,
       'accept-connect-request',
-      { studentId },
+      { requestId },
     );
     return { teacherId, teacherName };
   }

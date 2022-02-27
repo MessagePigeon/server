@@ -43,8 +43,8 @@ After login, send this to server
 
 | Event                  | Description            | Data            |
 | ---------------------- | ---------------------- | --------------- |
-| reject-connect-request | student reject connect | `{ studentId }` |
-| accept-connect-request | student accept connect | `{ studentId }` |
+| reject-connect-request | student reject connect | `{ requestId }` |
+| accept-connect-request | student accept connect | `{ requestId }` |
 | student-online         | /                      | `{ studentId }` |
 | student-offline        | /                      | `{ studentId }` |
 | message-close          | close the message      | `{ studentId }` |
