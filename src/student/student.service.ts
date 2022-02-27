@@ -50,11 +50,11 @@ export class StudentService {
   }
 
   rejectTeacherConnectRequest(requestId: string) {
-    deleteArrayElementById(this.state.connectRequests, requestId);
     const { teacherId } = findArrayElementById(
       this.state.connectRequests,
       requestId,
     );
+    deleteArrayElementById(this.state.connectRequests, requestId);
     this.websocketService.socketSend(
       'teacher',
       teacherId,
