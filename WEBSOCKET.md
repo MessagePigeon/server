@@ -41,10 +41,10 @@ After login, send this to server
 
 ### Teacher
 
-| Event                  | Description            | Data            |
-| ---------------------- | ---------------------- | --------------- |
-| reject-connect-request | student reject connect | `{ requestId }` |
-| accept-connect-request | student accept connect | `{ requestId }` |
-| student-online         | /                      | `{ studentId }` |
-| student-offline        | /                      | `{ studentId }` |
-| message-close          | close the message      | `{ studentId }` |
+| Event                  | Description            | Data                       |
+| ---------------------- | ---------------------- | -------------------------- |
+| reject-connect-request | student reject connect | `{ requestId }`            |
+| accept-connect-request | student accept connect | `{ requestId }`            |
+| student-online         | /                      | `{ studentId }`            |
+| student-offline        | /                      | `{ studentId }`            |
+| message-close          | close the message      | `{ messageId, studentId }` |

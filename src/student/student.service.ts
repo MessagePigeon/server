@@ -120,6 +120,7 @@ export class StudentService {
       deleteArrayElementById(this.state.showingMessages, messageId);
     }
     this.websocketService.socketSend('teacher', teacherId, 'message-close', {
+      messageId,
       studentId,
     });
   }
