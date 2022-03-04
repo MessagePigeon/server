@@ -9,11 +9,9 @@ export class TasksService {
   private readonly logger = new Logger(TasksService.name);
   constructor(private readonly state: StateService) {}
 
-  /**
-   * Cleanup connect request which created more than 3 hours every day midnight
-   */
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  cleanupConnectRequests() {
+  cleanupStates() {
+    // Cleanup connect request which created more than 3 hours
     this.state.connectRequests.forEach(({ id, createdAt }, index) => {
       if (isTimeToNowGte(createdAt, '3h')) {
         this.state.connectRequests.splice(index, 1);
@@ -23,13 +21,7 @@ export class TasksService {
         );
       }
     });
-  }
-
-  /**
-   * Cleanup message state which created more than 12 hours every day midnight
-   */
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  cleanupShowingMessages() {
+    // Cleanup message state which created more than 12 hours
     this.state.showingMessages.forEach(({ id, createdAt }, index) => {
       if (isTimeToNowGte(createdAt, '12h')) {
         this.state.showingMessages.splice(index, 1);
