@@ -5,8 +5,8 @@ import { isTimeToNowGte } from '~/common/utils/is-time-to-now-gte.util';
 import { StateService } from '~/state/state.service';
 
 @Injectable()
-export class TasksService {
-  private readonly logger = new Logger(TasksService.name);
+export class TaskService {
+  private readonly logger = new Logger(TaskService.name);
   constructor(private readonly state: StateService) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)

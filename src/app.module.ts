@@ -5,9 +5,9 @@ import { AdminModule } from './admin/admin.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { StateModule } from './state/state.module';
 import { StudentModule } from './student/student.module';
+import { TaskModule } from './task/task.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { WebsocketModule } from './websocket/websocket.module';
-import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { TasksModule } from './tasks/tasks.module';
     PrismaModule,
     WebsocketModule,
     ScheduleModule.forRoot(),
-    TasksModule,
+    TaskModule,
   ],
 })
 export class AppModule {}
