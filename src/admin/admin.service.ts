@@ -155,10 +155,26 @@ export class AdminService {
       },
       select: { teacher: { select: { name: true } } },
     });
-    this.websocketService.socketSend('student', studentId, 'teacher-connect', {
+    this.websocketService.socketSend(
+      'student',
+      studentId,
+      'teacher-connect-by-admin',
+      {
+        teacherId,
+        teacherName,
+      },
+    );
+    const onlineStudentIds = this.state.onlineStudents.map(({ id }) => id);
+    this.websocketService.socketSend(
+      'teacher',
       teacherId,
-      teacherName,
-    });
+      'student-connect-by-admin',
+      {
+        studentId,
+        remark: defaultRemark,
+        online: onlineStudentIds.includes(studentId),
+      },
+    );
     return { defaultRemark, studentId, teacherId };
   }
 
@@ -175,6 +191,12 @@ export class AdminService {
       studentId,
       'teacher-disconnect',
       { teacherId },
+    );
+    this.websocketService.socketSend(
+      'teacher',
+      teacherId,
+      'student-disconnect-by-admin',
+      { studentId },
     );
     return { studentId, teacherId };
   }
