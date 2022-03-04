@@ -173,6 +173,13 @@ export class AdminController {
   async makeConnection(
     @Body(new ValidationPipe()) { studentId, teacherId }: ModifyConnectionDto,
   ) {
+    const isConnected = await this.adminService.checkIsConnected(
+      studentId,
+      teacherId,
+    );
+    if (isConnected) {
+      throw new HttpException('Already Connected', HttpStatus.FORBIDDEN);
+    }
     return await this.adminService.makeConnection(studentId, teacherId);
   }
 
@@ -183,6 +190,13 @@ export class AdminController {
   async makeDisconnection(
     @Body(new ValidationPipe()) { studentId, teacherId }: ModifyConnectionDto,
   ) {
+    const isConnected = await this.adminService.checkIsConnected(
+      studentId,
+      teacherId,
+    );
+    if (!isConnected) {
+      throw new HttpException('Not Connected Yet', HttpStatus.FORBIDDEN);
+    }
     return await this.adminService.makeDisconnection(studentId, teacherId);
   }
 

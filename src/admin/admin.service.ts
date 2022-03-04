@@ -139,6 +139,14 @@ export class AdminService {
     return await this.db.student.update({ where: { id }, data });
   }
 
+  async checkIsConnected(studentId: string, teacherId: string) {
+    const { students } = await this.db.teacher.findUnique({
+      where: { id: teacherId },
+      select: { students: { where: { id: studentId } } },
+    });
+    return students.length !== 0;
+  }
+
   async makeConnection(studentId: string, teacherId: string) {
     const { defaultRemark } = await this.db.student.update({
       where: { id: studentId },
