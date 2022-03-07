@@ -7,7 +7,6 @@ import {
   HttpStatus,
   Patch,
   Post,
-  Put,
   Query,
   UseGuards,
   ValidationPipe,
@@ -60,7 +59,7 @@ export class AdminController {
     return { status: true };
   }
 
-  @Put('teacher/register-codes')
+  @Post('teacher/register-codes')
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Generate teacher register codes' })
