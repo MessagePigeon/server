@@ -21,7 +21,7 @@ import { ConnectStudentDto } from './dto/connect-student.dto';
 import { DeleteStudentDto } from './dto/delete-student.dto';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
 import { ModifyPasswordDto } from './dto/modify-password.dto';
-import { modifyNameDto } from './dto/modify-name.dto';
+import { ModifyNameDto } from './dto/modify-name.dto';
 import { ModifyStudentRemarkDto } from './dto/modify-student-remark.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { SendMessageDto } from './dto/send-message.dto';
@@ -97,7 +97,7 @@ export class TeacherController {
   @ApiBearerAuth('teacher')
   async modifyName(
     @AuthUserId() userId: string,
-    @Body(new ValidationPipe()) { newName }: modifyNameDto,
+    @Body(new ValidationPipe()) { newName }: ModifyNameDto,
   ) {
     return await this.teacherService.modifyName(userId, newName);
   }
