@@ -33,7 +33,7 @@ After login, send this to server
 
 | Event                    | Description                          | Data                                                                                           |
 | ------------------------ | ------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| logout                   | caused by duplicate login            | /                                                                                              |
+| logout                   | duplicate login or deleted by admin  | /                                                                                              |
 | connect-request          | teacher want to connect this student | `{ requestId: string, teacherName: string }`                                                   |
 | message                  | message sent by teacher              | `{ messageId: number, message: string, teacherName: string, tts: number, closeDelay: number }` |
 | teacher-disconnect       | disconnect by teacher (or admin)     | `{ teacherId: string }`                                                                        |
@@ -50,3 +50,4 @@ After login, send this to server
 | message-close               | close the message                    | `{ messageId: number, studentId: string }`              |
 | student-connect-by-admin    | connect student by admin forcibly    | `{ studentId: string, remark: string, online:boolean }` |
 | student-disconnect-by-admin | disconnect student by admin forcibly | `{ studentId: string }`                                 |
+| logout                      | deleted by admin                     | /                                                       |

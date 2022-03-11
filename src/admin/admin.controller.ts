@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -19,6 +20,7 @@ import { generateRandomString } from '~/common/utils/generate-random-string.util
 import { StudentService } from '~/student/student.service';
 import { TeacherService } from '~/teacher/teacher.service';
 import { AdminService } from './admin.service';
+import { DeleteStudentOrTeacherDto } from './dto/delete-student-or-teacher.dto';
 import { FindMessagesDto } from './dto/find-messages.dto';
 import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
@@ -214,5 +216,27 @@ export class AdminController {
       startTime,
       endTime,
     );
+  }
+
+  @Delete('student')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
+  async deleteStudent(
+    @Query(new ValidationPipe()) { id }: DeleteStudentOrTeacherDto,
+  ) {
+    await this.adminService.deleteStudent(id);
+    return { id };
+  }
+
+  @Delete('teacher')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
+  async deleteTeacher(
+    @Query(new ValidationPipe()) { id }: DeleteStudentOrTeacherDto,
+  ) {
+    await this.adminService.deleteTeacher(id);
+    return { id };
   }
 }

@@ -241,4 +241,14 @@ export class AdminService {
     });
     return { data, count };
   }
+
+  async deleteStudent(id: string) {
+    this.websocketService.socketSend('student', id, 'logout');
+    await this.db.student.delete({ where: { id } });
+  }
+
+  async deleteTeacher(id: string) {
+    this.websocketService.socketSend('teacher', id, 'logout');
+    await this.db.teacher.delete({ where: { id } });
+  }
 }
