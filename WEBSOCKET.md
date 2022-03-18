@@ -41,13 +41,13 @@ After login, send this to server
 
 ### Teacher
 
-| Event                       | Description                          | Data                                                    |
-| --------------------------- | ------------------------------------ | ------------------------------------------------------- |
-| reject-connect-request      | student reject connect               | `{ requestId: string }`                                 |
-| accept-connect-request      | student accept connect               | `{ requestId: string }`                                 |
-| student-online              | /                                    | `{ studentId: string }`                                 |
-| student-offline             | /                                    | `{ studentId: string }`                                 |
-| message-close               | close the message                    | `{ messageId: number, studentId: string }`              |
-| student-connect-by-admin    | connect student by admin forcibly    | `{ studentId: string, remark: string, online:boolean }` |
-| student-disconnect-by-admin | disconnect student by admin forcibly | `{ studentId: string }`                                 |
-| logout                      | deleted by admin                     | /                                                       |
+| Event                       | Description                          | Data                                                     |
+| --------------------------- | ------------------------------------ | -------------------------------------------------------- |
+| reject-connect-request      | student reject connect               | `{ requestId: string }`                                  |
+| accept-connect-request      | student accept connect               | `{ requestId: string }`                                  |
+| student-online              | /                                    | `{ studentId: string }`                                  |
+| student-offline             | /                                    | `{ studentId: string }`                                  |
+| message-close               | close the message                    | `{ messageId: number, studentId: string }`               |
+| student-connect-by-admin    | connect student by admin forcibly    | `{ studentId: string, remark: string, online: boolean }` |
+| student-disconnect-by-admin | disconnect student by admin forcibly | `{ studentId: string }`                                  |
+| logout                      | deleted by admin                     | /                                                        |
