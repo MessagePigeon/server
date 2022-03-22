@@ -1,7 +1,7 @@
 {
-  "name": "message-pigeon-server",
-  "version": "0.0.1",
-  "description": "",
+  "name": "@mpigeon/server",
+  "version": "0.0.0",
+  "description": "Message Pigeon Backend",
   "author": "jsun969",
   "private": true,
   "license": "AGPL-3.0",
