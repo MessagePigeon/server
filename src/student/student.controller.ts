@@ -69,9 +69,10 @@ export class StudentController {
   ) {
     const isAllowAnswerRequest =
       this.studentService.checkConnectRequestPermission(userId, requestId);
-    if (isAllowAnswerRequest) {
-      this.studentService.rejectTeacherConnectRequest(requestId);
+    if (!isAllowAnswerRequest) {
+      throw new HttpException('Request Not Found', HttpStatus.NOT_FOUND);
     }
+    this.studentService.rejectTeacherConnectRequest(requestId);
   }
 
   @Post('connect-request-acceptance')
@@ -83,9 +84,11 @@ export class StudentController {
   ) {
     const isAllowAnswerRequest =
       this.studentService.checkConnectRequestPermission(userId, requestId);
-    if (isAllowAnswerRequest) {
-      return await this.studentService.acceptTeacherConnectRequest(requestId);
+    console.log(isAllowAnswerRequest);
+    if (!isAllowAnswerRequest) {
+      throw new HttpException('Request Not Found', HttpStatus.NOT_FOUND);
     }
+    return await this.studentService.acceptTeacherConnectRequest(requestId);
   }
 
   @Get('teachers')

@@ -42,11 +42,15 @@ export class StudentService {
   }
 
   checkConnectRequestPermission(studentId: string, requestId: string) {
-    const connectRequest = findArrayElementById(
-      this.state.connectRequests,
-      requestId,
-    );
-    return connectRequest.studentId === studentId;
+    try {
+      const connectRequest = findArrayElementById(
+        this.state.connectRequests,
+        requestId,
+      );
+      return connectRequest.studentId === studentId;
+    } catch (error) {
+      return false;
+    }
   }
 
   rejectTeacherConnectRequest(requestId: string) {
@@ -80,6 +84,7 @@ export class StudentService {
         student: { connect: { id: studentId } },
       },
     });
+    deleteArrayElementById(this.state.connectRequests, requestId);
     this.websocketService.socketSend(
       'teacher',
       teacherId,
