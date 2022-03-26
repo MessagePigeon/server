@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { checkSetsEquality } from '~/common/utils/check-sets-equality.util';
 import { deleteArrayElementById } from '~/common/utils/delete-array-element-by-id.util';
@@ -12,6 +12,7 @@ export class StudentService {
   constructor(
     private readonly db: PrismaService,
     private readonly state: StateService,
+    @Inject(forwardRef(() => WebsocketService))
     private readonly websocketService: WebsocketService,
   ) {}
 

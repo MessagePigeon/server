@@ -1,16 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import * as WebSocket from 'ws';
 import { deleteArrayElementById } from '~/common/utils/delete-array-element-by-id.util';
 import { findArrayElementById } from '~/common/utils/find-array-element-by-id.util';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { PrismaService } from '~/prisma/prisma.service';
 import { StateService } from '~/state/state.service';
+import { StudentService } from '~/student/student.service';
 
 @Injectable()
 export class WebsocketService {
   constructor(
     private readonly state: StateService,
     private readonly db: PrismaService,
+    @Inject(forwardRef(() => StudentService))
+    private readonly studentService: StudentService,
   ) {}
 
   private checkClientOnline(id: string) {
@@ -46,6 +49,16 @@ export class WebsocketService {
 
   private async studentOffline(studentId: string) {
     deleteArrayElementById(this.state.onlineStudents, studentId);
+    // Close all received messages
+    this.state.showingMessages
+      .filter(({ studentIds }) => studentIds.has(studentId))
+      .forEach((message) => {
+        const isClosed = message.closedStudentIds.has(studentId);
+        if (!isClosed) {
+          this.studentService.closeMessage(studentId, message.id);
+        }
+      });
+    // Notify connected teachers that this student is offline
     const connectedTeachers = await this.findStudentConnectedTeachers(
       studentId,
     );
