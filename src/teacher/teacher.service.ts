@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { nanoid } from 'nanoid';
+import { checkSetsEquality } from '~/common/utils/check-sets-equality.util';
+import { deleteArrayElementById } from '~/common/utils/delete-array-element-by-id.util';
 import { findArrayElementById } from '~/common/utils/find-array-element-by-id.util';
 import {
   signHashPassword,
@@ -253,5 +255,20 @@ export class TeacherService {
     });
 
     return { data, total };
+  }
+
+  closeMessage(messageId: number, studentId: string) {
+    const { studentIds, closedStudentIds } = findArrayElementById(
+      this.state.showingMessages,
+      messageId,
+    );
+    closedStudentIds.add(studentId);
+    const isAllStudentsClose = checkSetsEquality(studentIds, closedStudentIds);
+    if (isAllStudentsClose) {
+      deleteArrayElementById(this.state.showingMessages, messageId);
+    }
+    this.websocketService.socketSend('student', studentId, 'close-message', {
+      messageId,
+    });
   }
 }

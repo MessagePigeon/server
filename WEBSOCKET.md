@@ -38,6 +38,7 @@ After login, send this to server
 | message                  | message sent by teacher              | `{ messageId: number, message: string, teacherName: string, tts: number, closeDelay: number }` |
 | teacher-disconnect       | disconnect by teacher (or admin)     | `{ teacherId: string }`                                                                        |
 | teacher-connect-by-admin | connect teacher by admin forcibly    | `{ teacherId: string, teacherName: string }`                                                   |
+| close-message            | close message by teacher             | `{ messageId: number }`                                                                        |
 
 ### Teacher
 

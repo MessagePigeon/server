@@ -17,11 +17,12 @@ import { AuthService } from '~/auth/auth.service';
 import { TeacherAuthGuard } from '~/auth/guards/teacher-auth.guard';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
 import { PaginationDto } from '~/common/dto/pagination.dto';
+import { CloseMessageByTeacherDto } from './dto/close-message-by-teacher.dto';
 import { ConnectStudentDto } from './dto/connect-student.dto';
 import { DeleteStudentDto } from './dto/delete-student.dto';
 import { LoginTeacherDto } from './dto/login-teacher.dto';
-import { ModifyPasswordDto } from './dto/modify-password.dto';
 import { ModifyNameDto } from './dto/modify-name.dto';
+import { ModifyPasswordDto } from './dto/modify-password.dto';
 import { ModifyStudentRemarkDto } from './dto/modify-student-remark.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
 import { SendMessageDto } from './dto/send-message.dto';
@@ -205,5 +206,17 @@ export class TeacherController {
     @Query(new ValidationPipe()) { skip, take }: PaginationDto,
   ) {
     return await this.teacherService.findMessages(userId, +skip, +take);
+  }
+
+  @Post('message-close')
+  @UseGuards(TeacherAuthGuard)
+  @ApiBearerAuth('teacher')
+  @ApiOperation({ summary: 'Teacher force close message for student' })
+  async closeMessage(
+    @Body(new ValidationPipe())
+    { messageId, studentId }: CloseMessageByTeacherDto,
+  ) {
+    this.teacherService.closeMessage(messageId, studentId);
+    return { success: true };
   }
 }
