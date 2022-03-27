@@ -225,7 +225,7 @@ export class AdminService {
         lte: endTime,
       },
     };
-    const count = await this.db.message.count({ where });
+    const total = await this.db.message.count({ where });
     const data = await this.db.message.findMany({
       skip,
       take,
@@ -239,7 +239,7 @@ export class AdminService {
         students: { select: { id: true, defaultRemark: true } },
       },
     });
-    return { data, count };
+    return { data, total };
   }
 
   async deleteStudent(id: string) {
