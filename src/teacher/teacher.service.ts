@@ -65,10 +65,10 @@ export class TeacherService {
   }
 
   async init(id: string) {
-    const { password, ...info } = await this.db.teacher.findUnique({
+    const { name } = await this.db.teacher.findUnique({
       where: { id },
     });
-    return info;
+    return { name };
   }
 
   async modifyName(id: string, newName: string) {
