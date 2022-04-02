@@ -13,6 +13,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { StudentAuthGuard } from '~/auth/guards/student-auth.guard';
+import { DEFAULT_SUCCESS_RESPONSE } from '~/common/constants';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
 import { AnswerConnectRequestDto } from './dto/answer-connect-request.dto';
 import { CloseMessageDto } from './dto/close-message.dto';
@@ -63,7 +64,7 @@ export class StudentController {
   @Post('connect-request-rejection')
   @UseGuards(StudentAuthGuard)
   @ApiBearerAuth('student')
-  async rejectConnectRequest(
+  rejectConnectRequest(
     @AuthUserId() userId: string,
     @Body(new ValidationPipe()) { requestId }: AnswerConnectRequestDto,
   ) {
@@ -73,6 +74,7 @@ export class StudentController {
       throw new HttpException('Request Not Found', HttpStatus.NOT_FOUND);
     }
     this.studentService.rejectTeacherConnectRequest(requestId);
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Post('connect-request-acceptance')
@@ -84,7 +86,6 @@ export class StudentController {
   ) {
     const isAllowAnswerRequest =
       this.studentService.checkConnectRequestPermission(userId, requestId);
-    console.log(isAllowAnswerRequest);
     if (!isAllowAnswerRequest) {
       throw new HttpException('Request Not Found', HttpStatus.NOT_FOUND);
     }
@@ -109,11 +110,11 @@ export class StudentController {
       userId,
       messageId,
     );
-    if (isAllowCloseMessage) {
-      return this.studentService.closeMessage(userId, messageId);
-    } else {
+    if (!isAllowCloseMessage) {
       throw new HttpException('Message Id Not Found', HttpStatus.NOT_FOUND);
     }
+    this.studentService.closeMessage(userId, messageId);
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Get('messages')

@@ -31,10 +31,10 @@ export class StudentService {
   }
 
   async init(id: string) {
-    const { key, ...info } = await this.db.student.findUnique({
+    const { defaultRemark } = await this.db.student.findUnique({
       where: { id },
     });
-    return info;
+    return { defaultRemark };
   }
 
   findConnectCode(id: string) {
