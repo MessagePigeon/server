@@ -68,7 +68,8 @@ export class AdminController {
   async generateTeacherRegisterCodes(
     @Body(new ValidationPipe()) { count }: GenerateRegisterCodesDto,
   ) {
-    return await this.adminService.generateTeacherRegisterCodes(count);
+    await this.adminService.generateTeacherRegisterCodes(count);
+    return { success: true };
   }
 
   @Get('teacher/register-codes')
@@ -102,11 +103,11 @@ export class AdminController {
     const isUsernameRepeated = await this.teacherService.checkUsernameExist(
       username,
     );
-    if (!isUsernameRepeated) {
-      return await this.adminService.generateTeacher(username, name);
-    } else {
+    if (isUsernameRepeated) {
       throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
     }
+    await this.adminService.generateTeacher(username, name);
+    return { success: true };
   }
 
   @Get('teachers')
@@ -148,11 +149,10 @@ export class AdminController {
       key = generateRandomString(16);
     }
     const isStudentKeyRepeated = await this.studentService.checkKeyExist(key);
-    if (!isStudentKeyRepeated) {
-      return await this.adminService.generateStudent(key, defaultRemark);
-    } else {
+    if (isStudentKeyRepeated) {
       throw new HttpException('Key Repeated', HttpStatus.FORBIDDEN);
     }
+    return await this.adminService.generateStudent(key, defaultRemark);
   }
 
   @Get('students')
@@ -170,7 +170,8 @@ export class AdminController {
   async modifyStudent(
     @Body(new ValidationPipe()) { id, ...data }: ModifyStudentDto,
   ) {
-    return await this.adminService.modifyStudent(id, data);
+    await this.adminService.modifyStudent(id, data);
+    return { success: true };
   }
 
   @Post('connection')
@@ -186,7 +187,8 @@ export class AdminController {
     if (isConnected) {
       throw new HttpException('Already Connected', HttpStatus.FORBIDDEN);
     }
-    return await this.adminService.makeConnection(studentId, teacherId);
+    await this.adminService.makeConnection(studentId, teacherId);
+    return { success: true };
   }
 
   @Post('disconnection')
@@ -203,7 +205,8 @@ export class AdminController {
     if (!isConnected) {
       throw new HttpException('Not Connected Yet', HttpStatus.FORBIDDEN);
     }
-    return await this.adminService.makeDisconnection(studentId, teacherId);
+    await this.adminService.makeDisconnection(studentId, teacherId);
+    return { success: true };
   }
 
   @Get('messages')

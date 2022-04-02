@@ -24,7 +24,6 @@ export class AdminService {
     await this.db.registerCode.createMany({
       data: codes,
     });
-    return codes.map(({ code }) => code);
   }
 
   async findTeacherRegisterCode(skip: number, take: number) {
@@ -49,11 +48,9 @@ export class AdminService {
 
   async generateTeacher(username: string, name: string) {
     const password = generateRandomString(8);
-    const { id } = await this.db.teacher.create({
+    await this.db.teacher.create({
       data: { username, password: await signHashPassword(password), name },
-      select: { id: true },
     });
-    return { id, username, password, name };
   }
 
   async findTeachers(skip: number, take: number) {
@@ -118,7 +115,7 @@ export class AdminService {
   }
 
   async modifyStudent(id: string, data: Partial<Omit<ModifyStudentDto, 'id'>>) {
-    return await this.db.student.update({ where: { id }, data });
+    await this.db.student.update({ where: { id }, data });
   }
 
   async checkIsConnected(studentId: string, teacherId: string) {
@@ -165,7 +162,6 @@ export class AdminService {
         online: onlineStudentIds.includes(studentId),
       },
     );
-    return { defaultRemark, studentId, teacherId };
   }
 
   async makeDisconnection(studentId: string, teacherId: string) {
@@ -188,7 +184,6 @@ export class AdminService {
       'student-disconnect-by-admin',
       { studentId },
     );
-    return { studentId, teacherId };
   }
 
   async findMessages(
