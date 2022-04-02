@@ -58,7 +58,7 @@ export class AdminController {
   @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Init with jwt header' })
   init() {
-    return { status: true };
+    return { success: true };
   }
 
   @Post('teacher/register-codes')
@@ -88,7 +88,8 @@ export class AdminController {
   async deleteTeacherRegisterCodes(
     @Query(new ValidationPipe()) { id }: DeleteTeacherRegisterCodeDto,
   ) {
-    return await this.adminService.deleteTeacherRegisterCode(+id);
+    await this.adminService.deleteTeacherRegisterCode(+id);
+    return { success: true };
   }
 
   @Post('teacher')
@@ -230,7 +231,7 @@ export class AdminController {
     @Query(new ValidationPipe()) { id }: DeleteStudentOrTeacherDto,
   ) {
     await this.adminService.deleteStudent(id);
-    return { id };
+    return { success: true };
   }
 
   @Delete('teacher')
@@ -241,6 +242,6 @@ export class AdminController {
     @Query(new ValidationPipe()) { id }: DeleteStudentOrTeacherDto,
   ) {
     await this.adminService.deleteTeacher(id);
-    return { id };
+    return { success: true };
   }
 }
