@@ -68,20 +68,18 @@ export class TeacherController {
     const isUserNameExist = await this.teacherService.checkUsernameExist(
       username,
     );
-    if (isUserNameExist) {
-      const isPasswordCorrect = await this.teacherService.checkPasswordHash(
-        { username },
-        password,
-      );
-      if (isPasswordCorrect) {
-        const id = await this.teacherService.getId(username);
-        return await this.authService.signJwtWithId(id);
-      } else {
-        throw new HttpException('Password Incorrect', HttpStatus.UNAUTHORIZED);
-      }
-    } else {
+    if (!isUserNameExist) {
       throw new HttpException('Username Not Found', HttpStatus.UNAUTHORIZED);
     }
+    const isPasswordCorrect = await this.teacherService.checkPasswordHash(
+      { username },
+      password,
+    );
+    if (!isPasswordCorrect) {
+      throw new HttpException('Password Incorrect', HttpStatus.UNAUTHORIZED);
+    }
+    const id = await this.teacherService.getId(username);
+    return await this.authService.signJwtWithId(id);
   }
 
   @Get('init')
