@@ -39,7 +39,7 @@ export class TeacherService {
     registerCode: string,
   ) {
     await this.db.registerCode.delete({ where: { code: registerCode } });
-    return await this.db.teacher.create({
+    await this.db.teacher.create({
       data: {
         username,
         password: await signHashPassword(password),
@@ -75,17 +75,14 @@ export class TeacherService {
     return await this.db.teacher.update({
       where: { id },
       data: { name: newName },
-      select: { username: true, name: true },
     });
   }
 
   async modifyPassword(id: string, newPassword: string) {
-    const { username } = await this.db.teacher.update({
+    await this.db.teacher.update({
       where: { id },
       data: { password: await signHashPassword(newPassword) },
-      select: { username: true },
     });
-    return { username, password: newPassword };
   }
 
   findStudentByConnectCode(connectCode: string) {
@@ -191,7 +188,6 @@ export class TeacherService {
       where: { teacherId_studentId: { teacherId, studentId } },
       data: { remark },
     });
-    return { studentId, remark };
   }
 
   async deleteStudent(teacherId: string, studentId: string) {

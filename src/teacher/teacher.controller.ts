@@ -52,12 +52,8 @@ export class TeacherController {
     if (isUsernameRepeated) {
       throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
     }
-    return await this.teacherService.register(
-      username,
-      password,
-      name,
-      registerCode,
-    );
+    await this.teacherService.register(username, password, name, registerCode);
+    return { success: true };
   }
 
   @Post('login')
@@ -97,7 +93,8 @@ export class TeacherController {
     @AuthUserId() userId: string,
     @Body(new ValidationPipe()) { newName }: ModifyNameDto,
   ) {
-    return await this.teacherService.modifyName(userId, newName);
+    await this.teacherService.modifyName(userId, newName);
+    return { success: true };
   }
 
   @Patch('password')
@@ -111,11 +108,11 @@ export class TeacherController {
       { id: userId },
       oldPassword,
     );
-    if (isOldPasswordCorrect) {
-      return await this.teacherService.modifyPassword(userId, newPassword);
-    } else {
+    if (!isOldPasswordCorrect) {
       throw new HttpException('Old Password Incorrect', HttpStatus.FORBIDDEN);
     }
+    await this.teacherService.modifyPassword(userId, newPassword);
+    return { success: true };
   }
 
   @Post('connect-request')
@@ -176,11 +173,8 @@ export class TeacherController {
     @Body(new ValidationPipe())
     { studentId, newRemark }: ModifyStudentRemarkDto,
   ) {
-    return await this.teacherService.modifyStudentRemark(
-      userId,
-      studentId,
-      newRemark,
-    );
+    await this.teacherService.modifyStudentRemark(userId, studentId, newRemark);
+    return { success: true };
   }
 
   @Delete('student')
@@ -192,7 +186,8 @@ export class TeacherController {
     @Query(new ValidationPipe())
     { studentId }: DeleteStudentDto,
   ) {
-    return await this.teacherService.deleteStudent(userId, studentId);
+    await this.teacherService.deleteStudent(userId, studentId);
+    return { success: true };
   }
 
   @Get('messages')
