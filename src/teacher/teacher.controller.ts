@@ -15,6 +15,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { TeacherAuthGuard } from '~/auth/guards/teacher-auth.guard';
+import { DEFAULT_SUCCESS_RESPONSE } from '~/common/constants';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
 import { PaginationDto } from '~/common/dto/pagination.dto';
 import { CloseMessageByTeacherDto } from './dto/close-message-by-teacher.dto';
@@ -53,7 +54,7 @@ export class TeacherController {
       throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
     }
     await this.teacherService.register(username, password, name, registerCode);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Post('login')
@@ -94,7 +95,7 @@ export class TeacherController {
     @Body(new ValidationPipe()) { newName }: ModifyNameDto,
   ) {
     await this.teacherService.modifyName(userId, newName);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Patch('password')
@@ -112,7 +113,7 @@ export class TeacherController {
       throw new HttpException('Old Password Incorrect', HttpStatus.FORBIDDEN);
     }
     await this.teacherService.modifyPassword(userId, newPassword);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Post('connect-request')
@@ -174,7 +175,7 @@ export class TeacherController {
     { studentId, newRemark }: ModifyStudentRemarkDto,
   ) {
     await this.teacherService.modifyStudentRemark(userId, studentId, newRemark);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Delete('student')
@@ -187,7 +188,7 @@ export class TeacherController {
     { studentId }: DeleteStudentDto,
   ) {
     await this.teacherService.deleteStudent(userId, studentId);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Get('messages')
@@ -209,6 +210,6 @@ export class TeacherController {
     { messageId, studentId }: CloseMessageByTeacherDto,
   ) {
     this.teacherService.closeMessage(messageId, studentId);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 }

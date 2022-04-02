@@ -15,6 +15,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { AdminAuthGuard } from '~/auth/guards/admin-auth.guard';
+import { DEFAULT_SUCCESS_RESPONSE } from '~/common/constants';
 import { PaginationDto } from '~/common/dto/pagination.dto';
 import { generateRandomString } from '~/common/utils/generate-random-string.util';
 import { StudentService } from '~/student/student.service';
@@ -58,7 +59,7 @@ export class AdminController {
   @UseGuards(AdminAuthGuard)
   @ApiOperation({ summary: 'Init with jwt header' })
   init() {
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Post('teacher/register-codes')
@@ -69,7 +70,7 @@ export class AdminController {
     @Body(new ValidationPipe()) { count }: GenerateRegisterCodesDto,
   ) {
     await this.adminService.generateTeacherRegisterCodes(count);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Get('teacher/register-codes')
@@ -90,7 +91,7 @@ export class AdminController {
     @Query(new ValidationPipe()) { id }: DeleteTeacherRegisterCodeDto,
   ) {
     await this.adminService.deleteTeacherRegisterCode(+id);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Post('teacher')
@@ -107,7 +108,7 @@ export class AdminController {
       throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
     }
     await this.adminService.generateTeacher(username, name);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Get('teachers')
@@ -171,7 +172,7 @@ export class AdminController {
     @Body(new ValidationPipe()) { id, ...data }: ModifyStudentDto,
   ) {
     await this.adminService.modifyStudent(id, data);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Post('connection')
@@ -188,7 +189,7 @@ export class AdminController {
       throw new HttpException('Already Connected', HttpStatus.FORBIDDEN);
     }
     await this.adminService.makeConnection(studentId, teacherId);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Post('disconnection')
@@ -206,7 +207,7 @@ export class AdminController {
       throw new HttpException('Not Connected Yet', HttpStatus.FORBIDDEN);
     }
     await this.adminService.makeDisconnection(studentId, teacherId);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Get('messages')
@@ -234,7 +235,7 @@ export class AdminController {
     @Query(new ValidationPipe()) { id }: DeleteStudentOrTeacherDto,
   ) {
     await this.adminService.deleteStudent(id);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 
   @Delete('teacher')
@@ -245,6 +246,6 @@ export class AdminController {
     @Query(new ValidationPipe()) { id }: DeleteStudentOrTeacherDto,
   ) {
     await this.adminService.deleteTeacher(id);
-    return { success: true };
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 }
