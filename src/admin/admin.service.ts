@@ -18,45 +18,27 @@ export class AdminService {
   ) {}
 
   async generateTeacherRegisterCodes(count: number) {
-    if (count === 1) {
-      const code = generateRandomString(32);
-      return await this.db.registerCode.create({
-        data: { code },
-        select: { id: true, code: true },
-      });
-    } else {
-      const largestIdData = await this.db.registerCode.findFirst({
-        select: { id: true },
-        orderBy: { id: 'desc' },
-      });
-      const largestId = largestIdData === null ? 0 : largestIdData.id;
-
-      const codes = new Array(count)
-        .fill(null)
-        .map(() => ({ code: generateRandomString(32) }));
-      await this.db.registerCode.createMany({
-        data: codes,
-      });
-
-      return codes.reverse().map(({ code }, index) => ({
-        id: largestId + count - index,
-        code,
-      }));
-    }
+    const codes = new Array(count)
+      .fill(null)
+      .map(() => ({ code: generateRandomString(32) }));
+    await this.db.registerCode.createMany({
+      data: codes,
+    });
+    return codes.map(({ code }) => code);
   }
 
-  async findTeacherRegisterCode(skip: number, take: number, used?: boolean) {
+  async findTeacherRegisterCode(skip: number, take: number) {
     const data = await this.db.registerCode.findMany({
-      select: { id: true, code: true, used: used === undefined },
-      where: { used },
       skip,
       take,
       orderBy: { id: 'desc' },
     });
-    const total = await this.db.registerCode.count({
-      where: { used },
-    });
+    const total = await this.db.registerCode.count();
     return { data, total };
+  }
+
+  async deleteTeacherRegisterCode(id: number) {
+    await this.db.registerCode.delete({ where: { id } });
   }
 
   checkPassword(password: string) {

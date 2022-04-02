@@ -21,8 +21,8 @@ import { StudentService } from '~/student/student.service';
 import { TeacherService } from '~/teacher/teacher.service';
 import { AdminService } from './admin.service';
 import { DeleteStudentOrTeacherDto } from './dto/delete-student-or-teacher.dto';
+import { DeleteTeacherRegisterCodeDto } from './dto/delete-teacher-register-code.dto';
 import { FindMessagesDto } from './dto/find-messages.dto';
-import { FindRegisterCodeDto } from './dto/find-register-codes.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
 import { GenerateStudentDto } from './dto/generate-student.dto';
 import { GenerateTeacherDto } from './dto/generate-teacher.dto';
@@ -76,15 +76,19 @@ export class AdminController {
   @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Get teacher register codes' })
   async findTeacherRegisterCodes(
-    @Query(new ValidationPipe()) { skip, take, used }: FindRegisterCodeDto,
+    @Query(new ValidationPipe()) { skip, take }: PaginationDto,
   ) {
-    return await this.adminService.findTeacherRegisterCode(
-      +skip,
-      +take,
-      (used as unknown) === undefined
-        ? undefined
-        : (used as unknown) === 'true',
-    );
+    return await this.adminService.findTeacherRegisterCode(+skip, +take);
+  }
+
+  @Delete('teacher/register-codes')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
+  async deleteTeacherRegisterCodes(
+    @Query(new ValidationPipe()) { id }: DeleteTeacherRegisterCodeDto,
+  ) {
+    return await this.adminService.deleteTeacherRegisterCode(+id);
   }
 
   @Post('teacher')

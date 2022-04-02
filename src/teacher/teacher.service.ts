@@ -19,17 +19,6 @@ export class TeacherService {
     private readonly websocketService: WebsocketService,
   ) {}
 
-  async checkRegisterCodeValid(registerCode: string) {
-    const isRegisterCodeValidData = await this.db.registerCode.findFirst({
-      where: { code: registerCode },
-      select: { used: true },
-    });
-    const isRegisterCodeStatusValid = isRegisterCodeValidData
-      ? !isRegisterCodeValidData.used
-      : false;
-    return isRegisterCodeStatusValid;
-  }
-
   async checkUsernameExist(username: string) {
     const isUsernameExistData = await this.db.teacher.findUnique({
       where: { username },
@@ -38,14 +27,18 @@ export class TeacherService {
     return isUsernameExist;
   }
 
-  async updateRegisterCode(registerCode: string) {
-    return await this.db.registerCode.update({
-      where: { code: registerCode },
-      data: { used: true },
-    });
+  async checkRegisterCodeInvalid(code: string) {
+    const count = await this.db.registerCode.count({ where: { code } });
+    return count === 0;
   }
 
-  async create(username: string, password: string, name: string) {
+  async register(
+    username: string,
+    password: string,
+    name: string,
+    registerCode: string,
+  ) {
+    await this.db.registerCode.delete({ where: { code: registerCode } });
     return await this.db.teacher.create({
       data: {
         username,

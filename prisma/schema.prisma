@@ -10,8 +10,7 @@ datasource db {
 model RegisterCode {
   id Int @id @default(autoincrement())
 
-  code String  @unique
-  used Boolean @default(false)
+  code String @unique
 }
 
 model Teacher {

@@ -41,24 +41,23 @@ export class TeacherController {
     @Body(new ValidationPipe())
     { registerCode, username, password, name }: RegisterTeacherDto,
   ) {
-    const isRegisterCodeStatusValid =
-      await this.teacherService.checkRegisterCodeValid(registerCode);
-    if (isRegisterCodeStatusValid) {
-      const isUsernameRepeated = await this.teacherService.checkUsernameExist(
-        username,
-      );
-      if (!isUsernameRepeated) {
-        await this.teacherService.updateRegisterCode(registerCode);
-        return await this.teacherService.create(username, password, name);
-      } else {
-        throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
-      }
-    } else {
-      throw new HttpException(
-        'Register Code Not Found',
-        HttpStatus.UNAUTHORIZED,
-      );
+    const isRegisterCodeStatusInvalid =
+      await this.teacherService.checkRegisterCodeInvalid(registerCode);
+    if (isRegisterCodeStatusInvalid) {
+      throw new HttpException('Register Code Invalid', HttpStatus.FORBIDDEN);
     }
+    const isUsernameRepeated = await this.teacherService.checkUsernameExist(
+      username,
+    );
+    if (isUsernameRepeated) {
+      throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
+    }
+    return await this.teacherService.register(
+      username,
+      password,
+      name,
+      registerCode,
+    );
   }
 
   @Post('login')
