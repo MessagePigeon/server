@@ -39,6 +39,7 @@ After login, send this to server
 | teacher-disconnect       | disconnect by teacher (or admin)     | `{ teacherId: string }`                                                                        |
 | teacher-connect-by-admin | connect teacher by admin forcibly    | `{ teacherId: string, teacherName: string }`                                                   |
 | close-message            | close message by teacher             | `{ messageId: number }`                                                                        |
+| teacher-name-changed     | /                                    | `{ teacherId: string, newName: string }`                                                       |
 
 ### Teacher
 

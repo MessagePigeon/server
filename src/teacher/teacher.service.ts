@@ -72,7 +72,22 @@ export class TeacherService {
   }
 
   async modifyName(id: string, newName: string) {
-    return await this.db.teacher.update({
+    const { students } = await this.db.teacher.findUnique({
+      where: { id },
+      select: { students: { select: { id: true } } },
+    });
+    students.forEach(({ id: studentId }) => {
+      this.websocketService.socketSend(
+        'student',
+        studentId,
+        'teacher-name-changed',
+        {
+          teacherId: id,
+          newName,
+        },
+      );
+    });
+    await this.db.teacher.update({
       where: { id },
       data: { name: newName },
     });
