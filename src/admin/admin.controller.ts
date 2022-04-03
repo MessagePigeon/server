@@ -83,7 +83,7 @@ export class AdminController {
     return await this.adminService.findTeacherRegisterCode(+skip, +take);
   }
 
-  @Delete('teacher/register-codes')
+  @Delete('teacher/register-code')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth('admin')
