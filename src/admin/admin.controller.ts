@@ -24,6 +24,8 @@ import { AdminService } from './admin.service';
 import { DeleteStudentOrTeacherDto } from './dto/delete-student-or-teacher.dto';
 import { DeleteTeacherRegisterCodeDto } from './dto/delete-teacher-register-code.dto';
 import { FindMessagesDto } from './dto/find-messages.dto';
+import { FindStudentsDto } from './dto/find-students.dto';
+import { FindTeacherDto } from './dto/find-teachers.dto';
 import { GenerateRegisterCodesDto } from './dto/generate-register-codes.dto';
 import { GenerateStudentDto } from './dto/generate-student.dto';
 import { GenerateTeacherDto } from './dto/generate-teacher.dto';
@@ -115,9 +117,16 @@ export class AdminController {
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth('admin')
   async findTeachers(
-    @Query(new ValidationPipe()) { skip, take }: PaginationDto,
+    @Query(new ValidationPipe())
+    { skip, take, id, username, name }: FindTeacherDto,
   ) {
-    return await this.adminService.findTeachers(+skip, +take);
+    return await this.adminService.findTeachers(
+      +skip,
+      +take,
+      id,
+      username,
+      name,
+    );
   }
 
   @Patch('teacher/name')
@@ -160,9 +169,15 @@ export class AdminController {
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth('admin')
   async findStudents(
-    @Query(new ValidationPipe()) { skip, take }: PaginationDto,
+    @Query(new ValidationPipe())
+    { skip, take, id, defaultRemark }: FindStudentsDto,
   ) {
-    return await this.adminService.findStudents(+skip, +take);
+    return await this.adminService.findStudents(
+      +skip,
+      +take,
+      id,
+      defaultRemark,
+    );
   }
 
   @Patch('student')

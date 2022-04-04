@@ -53,7 +53,18 @@ export class AdminService {
     });
   }
 
-  async findTeachers(skip: number, take: number) {
+  async findTeachers(
+    skip: number,
+    take: number,
+    id?: string,
+    username?: string,
+    name?: string,
+  ) {
+    const where: Prisma.TeacherWhereInput = {
+      id,
+      username: { contains: username },
+      name: { contains: name },
+    };
     const dbData = await this.db.teacher.findMany({
       select: {
         id: true,
@@ -61,6 +72,7 @@ export class AdminService {
         name: true,
         students: { select: { id: true, defaultRemark: true } },
       },
+      where,
       skip,
       take,
       orderBy: { createdAt: 'desc' },
@@ -71,7 +83,7 @@ export class AdminService {
       ...data,
       online: onlineTeachersId.includes(id),
     }));
-    const total = await this.db.teacher.count();
+    const total = await this.db.teacher.count({ where });
     return { data, total };
   }
 
@@ -92,7 +104,16 @@ export class AdminService {
     return { key, defaultRemark };
   }
 
-  async findStudents(skip: number, take: number) {
+  async findStudents(
+    skip: number,
+    take: number,
+    id?: string,
+    defaultRemark?: string,
+  ) {
+    const where: Prisma.StudentWhereInput = {
+      id,
+      defaultRemark: { contains: defaultRemark },
+    };
     const dbData = await this.db.student.findMany({
       select: {
         id: true,
@@ -100,9 +121,10 @@ export class AdminService {
         defaultRemark: true,
         teachers: { select: { id: true, name: true } },
       },
-      orderBy: { createdAt: 'desc' },
+      where,
       skip,
       take,
+      orderBy: { createdAt: 'desc' },
     });
     const onlineStudentIds = this.state.onlineStudents.map(({ id }) => id);
     const data = dbData.map(({ id, ...data }) => ({
@@ -110,7 +132,7 @@ export class AdminService {
       ...data,
       online: onlineStudentIds.includes(id),
     }));
-    const total = await this.db.student.count();
+    const total = await this.db.student.count({ where });
     return { data, total };
   }
 
