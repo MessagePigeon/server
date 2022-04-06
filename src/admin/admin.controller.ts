@@ -100,7 +100,7 @@ export class AdminController {
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Generate teacher with random password' })
-  async generateTeacher(
+  async createTeacher(
     @Body(new ValidationPipe()) { username, name }: GenerateTeacherDto,
   ) {
     const isUsernameRepeated = await this.teacherService.checkUsernameExist(
@@ -109,8 +109,7 @@ export class AdminController {
     if (isUsernameRepeated) {
       throw new HttpException('Username Repeated', HttpStatus.FORBIDDEN);
     }
-    await this.adminService.generateTeacher(username, name);
-    return DEFAULT_SUCCESS_RESPONSE;
+    return await this.adminService.createTeacher(username, name);
   }
 
   @Get('teachers')
@@ -152,7 +151,7 @@ export class AdminController {
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth('admin')
   @ApiOperation({ summary: 'Generate student with key or random string' })
-  async generateStudent(
+  async createStudent(
     @Body(new ValidationPipe()) { key, defaultRemark }: GenerateStudentDto,
   ) {
     if (key === undefined) {
@@ -162,7 +161,7 @@ export class AdminController {
     if (isStudentKeyRepeated) {
       throw new HttpException('Key Repeated', HttpStatus.FORBIDDEN);
     }
-    return await this.adminService.generateStudent(key, defaultRemark);
+    return await this.adminService.createStudent(key, defaultRemark);
   }
 
   @Get('students')

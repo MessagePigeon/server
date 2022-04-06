@@ -46,11 +46,12 @@ export class AdminService {
     return isPasswordValid;
   }
 
-  async generateTeacher(username: string, name: string) {
+  async createTeacher(username: string, name: string) {
     const password = generateRandomString(8);
     await this.db.teacher.create({
       data: { username, password: await signHashPassword(password), name },
     });
+    return { password };
   }
 
   async findTeachers(
@@ -97,7 +98,7 @@ export class AdminService {
     return { username, newPassword };
   }
 
-  async generateStudent(key: string, defaultRemark: string) {
+  async createStudent(key: string, defaultRemark: string) {
     await this.db.student.create({
       data: { key, defaultRemark },
     });
