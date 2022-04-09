@@ -216,6 +216,7 @@ export class AdminService {
     studentId?: string,
     startTime?: string,
     endTime?: string,
+    message?: string,
   ) {
     const where: Prisma.MessageWhereInput = {
       teacherId: teacherId,
@@ -224,6 +225,7 @@ export class AdminService {
         gte: startTime,
         lte: endTime,
       },
+      message: { contains: message },
     };
     const total = await this.db.message.count({ where });
     const data = await this.db.message.findMany({

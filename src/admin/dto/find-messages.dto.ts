@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsOptional, IsUUID } from 'class-validator';
+import { IsDateString, IsOptional, IsString, IsUUID } from 'class-validator';
 import { PaginationDto } from '~/common/dto/pagination.dto';
 
 export class FindMessagesDto extends PaginationDto {
@@ -22,4 +22,9 @@ export class FindMessagesDto extends PaginationDto {
   @IsOptional()
   @IsDateString()
   endTime: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  message: string;
 }
