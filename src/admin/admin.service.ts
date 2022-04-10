@@ -246,11 +246,35 @@ export class AdminService {
 
   async deleteStudent(id: string) {
     this.websocketService.socketSend('student', id, 'logout');
-    await this.db.student.delete({ where: { id } });
+    const disconnectAllStudents = this.db.student.update({
+      where: { id },
+      data: { teachers: { set: [] } },
+    });
+    const disconnectAllRemarks = this.db.studentRemark.deleteMany({
+      where: { studentId: id },
+    });
+    const deleteStudent = this.db.student.delete({ where: { id } });
+    await this.db.$transaction([
+      disconnectAllStudents,
+      disconnectAllRemarks,
+      deleteStudent,
+    ]);
   }
 
   async deleteTeacher(id: string) {
     this.websocketService.socketSend('teacher', id, 'logout');
-    await this.db.teacher.delete({ where: { id } });
+    const disconnectAllStudents = this.db.teacher.update({
+      where: { id },
+      data: { students: { set: [] } },
+    });
+    const deleteAllRemarks = this.db.studentRemark.deleteMany({
+      where: { teacherId: id },
+    });
+    const deleteTeacher = this.db.teacher.delete({ where: { id } });
+    await this.db.$transaction([
+      disconnectAllStudents,
+      deleteAllRemarks,
+      deleteTeacher,
+    ]);
   }
 }
