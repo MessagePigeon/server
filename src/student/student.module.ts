@@ -1,4 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '~/auth/auth.module';
 import { PrismaModule } from '~/prisma/prisma.module';
 import { StateModule } from '~/state/state.module';
@@ -12,6 +13,7 @@ import { StudentService } from './student.service';
     StateModule,
     PrismaModule,
     forwardRef(() => WebsocketModule),
+    ConfigModule,
   ],
   exports: [StudentService],
   controllers: [StudentController],

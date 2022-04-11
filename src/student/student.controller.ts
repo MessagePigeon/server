@@ -10,6 +10,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '~/auth/auth.service';
 import { StudentAuthGuard } from '~/auth/guards/student-auth.guard';
@@ -27,6 +28,7 @@ export class StudentController {
   constructor(
     private readonly studentService: StudentService,
     private readonly authService: AuthService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('login')
@@ -132,5 +134,14 @@ export class StudentController {
       teacherId,
       content,
     );
+  }
+
+  @Get('teacher-url')
+  @UseGuards(StudentAuthGuard)
+  @ApiBearerAuth('student')
+  getTeacherURL() {
+    const envURL = this.configService.get<string>('TEACHER_URL');
+    const url = new URL(envURL).toString();
+    return { url };
   }
 }
