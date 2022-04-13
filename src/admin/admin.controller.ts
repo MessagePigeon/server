@@ -195,6 +195,14 @@ export class AdminController {
   async makeConnection(
     @Body(new ValidationPipe()) { studentId, teacherId }: ModifyConnectionDto,
   ) {
+    const isTeacherIdExist = await this.adminService.checkTeacherId(teacherId);
+    if (!isTeacherIdExist) {
+      throw new HttpException('Teacher Id Not Found', HttpStatus.NOT_FOUND);
+    }
+    const isStudentIdExist = await this.adminService.checkStudentId(studentId);
+    if (!isStudentIdExist) {
+      throw new HttpException('Student Id Not Found', HttpStatus.NOT_FOUND);
+    }
     const isConnected = await this.adminService.checkIsConnected(
       studentId,
       teacherId,
@@ -213,6 +221,14 @@ export class AdminController {
   async makeDisconnection(
     @Body(new ValidationPipe()) { studentId, teacherId }: ModifyConnectionDto,
   ) {
+    const isTeacherIdExist = await this.adminService.checkTeacherId(teacherId);
+    if (!isTeacherIdExist) {
+      throw new HttpException('Teacher Id Not Found', HttpStatus.NOT_FOUND);
+    }
+    const isStudentIdExist = await this.adminService.checkStudentId(studentId);
+    if (!isStudentIdExist) {
+      throw new HttpException('Student Id Not Found', HttpStatus.NOT_FOUND);
+    }
     const isConnected = await this.adminService.checkIsConnected(
       studentId,
       teacherId,
