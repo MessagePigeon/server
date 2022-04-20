@@ -16,9 +16,9 @@ import { AuthService } from '~/auth/auth.service';
 import { StudentAuthGuard } from '~/auth/guards/student-auth.guard';
 import { DEFAULT_SUCCESS_RESPONSE } from '~/common/constants';
 import { AuthUserId } from '~/common/decorators/auth-user-id.decorator';
+import { PaginationDto } from '~/common/dto/pagination.dto';
 import { AnswerConnectRequestDto } from './dto/answer-connect-request.dto';
 import { CloseMessageDto } from './dto/close-message.dto';
-import { FindMessagesDto } from './dto/find-messages.dto';
 import { StudentLoginDto } from './dto/student-login.dto';
 import { StudentService } from './student.service';
 
@@ -125,15 +125,9 @@ export class StudentController {
   async findMessages(
     @AuthUserId() userId: string,
     @Query(new ValidationPipe())
-    { skip, take, teacherId, content }: FindMessagesDto,
+    { skip, take }: PaginationDto,
   ) {
-    return await this.studentService.findMessages(
-      userId,
-      +skip,
-      +take,
-      teacherId,
-      content,
-    );
+    return await this.studentService.findMessages(userId, +skip, +take);
   }
 
   @Get('teacher-url')

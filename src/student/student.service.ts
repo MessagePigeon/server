@@ -131,17 +131,9 @@ export class StudentService {
     });
   }
 
-  async findMessages(
-    id: string,
-    skip: number,
-    take: number,
-    teacherId?: string,
-    content?: string,
-  ) {
+  async findMessages(id: string, skip: number, take: number) {
     const where: Prisma.MessageWhereInput = {
       students: { some: { id } },
-      teacher: { id: teacherId },
-      message: { contains: content },
     };
     const dbData = await this.db.message.findMany({
       where,
