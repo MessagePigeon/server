@@ -40,11 +40,16 @@ export class WebsocketService {
   }
 
   private async findStudentConnectedTeachers(id: string) {
-    const { teachers } = await this.db.student.findUnique({
+    const teachersData = await this.db.student.findUnique({
       where: { id },
       select: { teachers: { select: { id: true } } },
     });
-    return teachers.map(({ id }) => id);
+    // teacher data may be null when deleting student
+    if (teachersData) {
+      return teachersData.teachers.map(({ id }) => id);
+    } else {
+      return null;
+    }
   }
 
   private async studentOffline(studentId: string) {
@@ -62,9 +67,12 @@ export class WebsocketService {
     const connectedTeachers = await this.findStudentConnectedTeachers(
       studentId,
     );
-    connectedTeachers.forEach((id) => {
-      this.socketSend('teacher', id, 'student-offline', { studentId });
-    });
+    // teacher data may be null when deleting student
+    if (connectedTeachers) {
+      connectedTeachers.forEach((id) => {
+        this.socketSend('teacher', id, 'student-offline', { studentId });
+      });
+    }
   }
 
   private teacherOffline(id: string, client: WebSocket) {
