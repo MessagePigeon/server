@@ -21,7 +21,6 @@ import { generateRandomString } from '~/common/utils/generate-random-string.util
 import { StudentService } from '~/student/student.service';
 import { TeacherService } from '~/teacher/teacher.service';
 import { AdminService } from './admin.service';
-import { DeleteStudentOrTeacherDto } from './dto/delete-student-or-teacher.dto';
 import { DeleteTeacherRegisterCodeDto } from './dto/delete-teacher-register-code.dto';
 import { FindMessagesDto } from './dto/find-messages.dto';
 import { FindStudentsDto } from './dto/find-students.dto';
@@ -264,27 +263,5 @@ export class AdminController {
       endTime,
       message,
     );
-  }
-
-  @Delete('student')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(AdminAuthGuard)
-  @ApiBearerAuth('admin')
-  async deleteStudent(
-    @Query(new ValidationPipe()) { id }: DeleteStudentOrTeacherDto,
-  ) {
-    await this.adminService.deleteStudent(id);
-    return DEFAULT_SUCCESS_RESPONSE;
-  }
-
-  @Delete('teacher')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(AdminAuthGuard)
-  @ApiBearerAuth('admin')
-  async deleteTeacher(
-    @Query(new ValidationPipe()) { id }: DeleteStudentOrTeacherDto,
-  ) {
-    await this.adminService.deleteTeacher(id);
-    return DEFAULT_SUCCESS_RESPONSE;
   }
 }
