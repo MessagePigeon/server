@@ -24,6 +24,14 @@ export class StudentAuthGuard implements CanActivate {
           where: { id: userId },
         })) !== null;
       if (isIdExist) {
+        const { ban } = await this.db.student.findUnique({
+          where: { id: userId },
+          select: { ban: true },
+        });
+        console.log('ban:', ban);
+        if (ban) {
+          throw new Error();
+        }
         request.userId = userId;
       }
       return isIdExist;

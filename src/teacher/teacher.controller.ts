@@ -68,6 +68,10 @@ export class TeacherController {
     if (!isUserNameExist) {
       throw new HttpException('Username Not Found', HttpStatus.UNAUTHORIZED);
     }
+    const isBanned = await this.teacherService.checkBan(username);
+    if (isBanned) {
+      throw new HttpException('Teacher Banned', HttpStatus.UNAUTHORIZED);
+    }
     const isPasswordCorrect = await this.teacherService.checkPasswordHash(
       { username },
       password,

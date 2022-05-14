@@ -36,12 +36,15 @@ export class StudentController {
   @ApiOperation({ summary: 'Login with key' })
   async login(@Body(new ValidationPipe()) { key }: StudentLoginDto) {
     const isKeyExist = await this.studentService.checkKeyExist(key);
-    if (isKeyExist) {
-      const id = await this.studentService.findIdByKey(key);
-      return await this.authService.signJwtWithId(id);
-    } else {
+    if (!isKeyExist) {
       throw new HttpException('Key Not Found', HttpStatus.UNAUTHORIZED);
     }
+    const isBanned = await this.studentService.checkBan(key);
+    if (isBanned) {
+      throw new HttpException('Student Banned', HttpStatus.UNAUTHORIZED);
+    }
+    const id = await this.studentService.findIdByKey(key);
+    return await this.authService.signJwtWithId(id);
   }
 
   @Get('init')

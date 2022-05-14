@@ -59,6 +59,14 @@ export class TeacherService {
     return await verifyHashPassword(passwordHash, password);
   }
 
+  async checkBan(username: string) {
+    const { ban } = await this.db.teacher.findUnique({
+      where: { username },
+      select: { ban: true },
+    });
+    return ban;
+  }
+
   async getId(username: string) {
     const { id } = await this.db.teacher.findUnique({ where: { username } });
     return id;

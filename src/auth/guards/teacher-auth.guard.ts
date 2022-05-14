@@ -24,6 +24,13 @@ export class TeacherAuthGuard implements CanActivate {
           where: { id: userId },
         })) !== null;
       if (isIdExist) {
+        const { ban } = await this.db.teacher.findUnique({
+          where: { id: userId },
+          select: { ban: true },
+        });
+        if (ban) {
+          throw new Error();
+        }
         request.userId = userId;
       }
       return isIdExist;

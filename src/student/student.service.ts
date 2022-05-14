@@ -22,6 +22,14 @@ export class StudentService {
     return isKeyExist;
   }
 
+  async checkBan(key: string) {
+    const { ban } = await this.db.student.findUnique({
+      where: { key },
+      select: { ban: true },
+    });
+    return ban;
+  }
+
   async findIdByKey(key: string) {
     const { id } = await this.db.student.findUnique({
       where: { key },
