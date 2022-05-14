@@ -25,6 +25,8 @@ model Teacher {
   studentRemarks StudentRemark[]
 
   messages Message[]
+
+  ban Boolean @default(false)
 }
 
 model Student {
@@ -38,6 +40,8 @@ model Student {
   studentRemarks StudentRemark[]
 
   messages Message[]
+
+  ban Boolean @default(false)
 }
 
 model StudentRemark {

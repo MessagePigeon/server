@@ -72,6 +72,7 @@ export class AdminService {
         username: true,
         name: true,
         students: { select: { id: true, defaultRemark: true } },
+        ban: true,
       },
       where,
       skip,
@@ -121,6 +122,7 @@ export class AdminService {
         key: true,
         defaultRemark: true,
         teachers: { select: { id: true, name: true } },
+        ban: true,
       },
       where,
       skip,
@@ -252,5 +254,13 @@ export class AdminService {
       },
     });
     return { data, total };
+  }
+
+  async modifyTeacherBanStatus(id: string, ban: boolean) {
+    await this.db.teacher.update({ where: { id }, data: { ban } });
+  }
+
+  async modifyStudentBanStatus(id: string, ban: boolean) {
+    await this.db.student.update({ where: { id }, data: { ban } });
   }
 }

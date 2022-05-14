@@ -21,6 +21,7 @@ import { generateRandomString } from '~/common/utils/generate-random-string.util
 import { StudentService } from '~/student/student.service';
 import { TeacherService } from '~/teacher/teacher.service';
 import { AdminService } from './admin.service';
+import { BanStudentOrTeacherDto } from './dto/ban-student-or-teacher.dto';
 import { DeleteTeacherRegisterCodeDto } from './dto/delete-teacher-register-code.dto';
 import { FindMessagesDto } from './dto/find-messages.dto';
 import { FindStudentsDto } from './dto/find-students.dto';
@@ -263,5 +264,25 @@ export class AdminController {
       endTime,
       message,
     );
+  }
+
+  @Patch('teacher/ban')
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
+  async banTeacher(
+    @Body(new ValidationPipe()) { id, ban }: BanStudentOrTeacherDto,
+  ) {
+    await this.adminService.modifyTeacherBanStatus(id, ban);
+    return DEFAULT_SUCCESS_RESPONSE;
+  }
+
+  @Patch('student/ban')
+  @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth('admin')
+  async banStudent(
+    @Body(new ValidationPipe()) { id, ban }: BanStudentOrTeacherDto,
+  ) {
+    await this.adminService.modifyStudentBanStatus(id, ban);
+    return DEFAULT_SUCCESS_RESPONSE;
   }
 }
