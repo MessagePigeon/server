@@ -257,10 +257,16 @@ export class AdminService {
   }
 
   async modifyTeacherBanStatus(id: string, ban: boolean) {
+    if (ban) {
+      this.websocketService.socketSend('teacher', id, 'logout');
+    }
     await this.db.teacher.update({ where: { id }, data: { ban } });
   }
 
   async modifyStudentBanStatus(id: string, ban: boolean) {
+    if (ban) {
+      this.websocketService.socketSend('student', id, 'logout');
+    }
     await this.db.student.update({ where: { id }, data: { ban } });
   }
 }
