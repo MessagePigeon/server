@@ -28,7 +28,6 @@ export class StudentAuthGuard implements CanActivate {
           where: { id: userId },
           select: { ban: true },
         });
-        console.log('ban:', ban);
         if (ban) {
           throw new Error();
         }
