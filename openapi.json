@@ -1,0 +1,3875 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Message Pigeon",
+    "description": "REST API. WebSocket events are documented as the `WsStudentEvent` / `WsTeacherEvent` schemas.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Admin Login",
+        "operationId": "admin_login_v1_admin_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminLogin"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teacher/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Teacher Login",
+        "operationId": "teacher_login_v1_teacher_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeacherLogin"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teacher/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Teacher Register",
+        "operationId": "teacher_register_v1_teacher_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeacherRegister"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Student Login",
+        "operationId": "student_login_v1_student_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentLogin"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/register-codes": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Create Register Codes",
+        "operationId": "create_register_codes_v1_admin_register_codes_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRegisterCodes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Register Codes",
+        "operationId": "list_register_codes_v1_admin_register_codes_get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Take"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_RegisterCodeOut_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/register-codes/{id}": {
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Delete Register Code",
+        "operationId": "delete_register_code_v1_admin_register_codes__id__delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/teachers": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Create Teacher",
+        "operationId": "create_teacher_v1_admin_teachers_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTeacher"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedTeacher"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Teachers",
+        "operationId": "list_teachers_v1_admin_teachers_get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Id"
+            }
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Username"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Name"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Take"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_TeacherOut_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/teachers/{id}": {
+      "patch": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Update Teacher",
+        "operationId": "update_teacher_v1_admin_teachers__id__patch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTeacher"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/teachers/{id}/password-reset": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Reset Teacher Password",
+        "operationId": "reset_teacher_password_v1_admin_teachers__id__password_reset_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewPassword"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/teachers/{id}/ban": {
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Ban Teacher",
+        "operationId": "ban_teacher_v1_admin_teachers__id__ban_put",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetBan"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/students": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Create Student",
+        "operationId": "create_student_v1_admin_students_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStudent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedStudent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Students",
+        "operationId": "list_students_v1_admin_students_get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Id"
+            }
+          },
+          {
+            "name": "defaultRemark",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Defaultremark"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Take"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_StudentOut_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/students/{id}": {
+      "patch": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Update Student",
+        "operationId": "update_student_v1_admin_students__id__patch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStudent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/students/{id}/ban": {
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Ban Student",
+        "operationId": "ban_student_v1_admin_students__id__ban_put",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetBan"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/connections": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Create Connection",
+        "operationId": "create_connection_v1_admin_connections_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateConnection"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/connections/{teacher_id}/{student_id}": {
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Delete Connection",
+        "operationId": "delete_connection_v1_admin_connections__teacher_id___student_id__delete",
+        "parameters": [
+          {
+            "name": "teacher_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Teacher Id"
+            }
+          },
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Student Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/messages": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Messages",
+        "operationId": "list_messages_v1_admin_messages_get",
+        "parameters": [
+          {
+            "name": "teacherId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Teacherid"
+            }
+          },
+          {
+            "name": "studentId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Studentid"
+            }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Starttime"
+            }
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Endtime"
+            }
+          },
+          {
+            "name": "message",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Message"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Take"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_AdminMessageOut_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teacher/me": {
+      "get": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "Get Me",
+        "operationId": "get_me_v1_teacher_me_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "Update Me",
+        "operationId": "update_me_v1_teacher_me_patch",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMe"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teacher/me/password": {
+      "post": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "Change Password",
+        "operationId": "change_password_v1_teacher_me_password_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teacher/students": {
+      "get": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "Roster",
+        "operationId": "roster_v1_teacher_students_get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Take"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_RosterStudent_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teacher/students/{student_id}": {
+      "patch": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "Update Remark",
+        "operationId": "update_remark_v1_teacher_students__student_id__patch",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Student Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRemark"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "Disconnect Student",
+        "operationId": "disconnect_student_v1_teacher_students__student_id__delete",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Student Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teacher/connect-requests": {
+      "post": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "Create Connect Request",
+        "operationId": "create_connect_request_v1_teacher_connect_requests_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateConnectRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectRequestCreated"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teacher/messages": {
+      "post": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "Send Message",
+        "operationId": "send_message_v1_teacher_messages_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SentMessage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "List Messages",
+        "operationId": "list_messages_v1_teacher_messages_get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Take"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_TeacherMessageOut_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/teacher/messages/{id}/close": {
+      "post": {
+        "tags": [
+          "teacher"
+        ],
+        "summary": "Close Message",
+        "operationId": "close_message_v1_teacher_messages__id__close_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloseMessageForStudent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student/me": {
+      "get": {
+        "tags": [
+          "student"
+        ],
+        "summary": "Get Me",
+        "operationId": "get_me_v1_student_me_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentMe"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student/connect-code": {
+      "get": {
+        "tags": [
+          "student"
+        ],
+        "summary": "Connect Code",
+        "operationId": "connect_code_v1_student_connect_code_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectCode"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student/connect-requests/{id}/accept": {
+      "post": {
+        "tags": [
+          "student"
+        ],
+        "summary": "Accept Request",
+        "operationId": "accept_request_v1_student_connect_requests__id__accept_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptedConnect"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student/connect-requests/{id}/reject": {
+      "post": {
+        "tags": [
+          "student"
+        ],
+        "summary": "Reject Request",
+        "operationId": "reject_request_v1_student_connect_requests__id__reject_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student/teachers": {
+      "get": {
+        "tags": [
+          "student"
+        ],
+        "summary": "Teachers",
+        "operationId": "teachers_v1_student_teachers_get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Take"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_TeacherBrief_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student/messages": {
+      "get": {
+        "tags": [
+          "student"
+        ],
+        "summary": "List Messages",
+        "operationId": "list_messages_v1_student_messages_get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Take"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_StudentMessageOut_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student/messages/{id}/close": {
+      "post": {
+        "tags": [
+          "student"
+        ],
+        "summary": "Close Message",
+        "operationId": "close_message_v1_student_messages__id__close_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/config": {
+      "get": {
+        "tags": [
+          "config"
+        ],
+        "summary": "Get Config",
+        "operationId": "get_config_v1_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Config"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AcceptedConnect": {
+        "properties": {
+          "teacherId": {
+            "type": "string",
+            "title": "Teacherid"
+          },
+          "teacherName": {
+            "type": "string",
+            "title": "Teachername"
+          }
+        },
+        "type": "object",
+        "required": [
+          "teacherId",
+          "teacherName"
+        ],
+        "title": "AcceptedConnect"
+      },
+      "AdminLogin": {
+        "properties": {
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "password"
+        ],
+        "title": "AdminLogin"
+      },
+      "AdminMessageOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "teacher": {
+            "$ref": "#/components/schemas/TeacherBrief"
+          },
+          "students": {
+            "items": {
+              "$ref": "#/components/schemas/StudentBrief"
+            },
+            "type": "array",
+            "title": "Students"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "createdAt",
+          "message",
+          "teacher",
+          "students"
+        ],
+        "title": "AdminMessageOut"
+      },
+      "ChangePassword": {
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Oldpassword"
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Newpassword"
+          }
+        },
+        "type": "object",
+        "required": [
+          "oldPassword",
+          "newPassword"
+        ],
+        "title": "ChangePassword"
+      },
+      "CloseMessageForStudent": {
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "title": "Studentid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentId"
+        ],
+        "title": "CloseMessageForStudent"
+      },
+      "Config": {
+        "properties": {
+          "teacherUrl": {
+            "type": "string",
+            "title": "Teacherurl"
+          }
+        },
+        "type": "object",
+        "required": [
+          "teacherUrl"
+        ],
+        "title": "Config"
+      },
+      "ConnectCode": {
+        "properties": {
+          "connectCode": {
+            "type": "string",
+            "title": "Connectcode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "connectCode"
+        ],
+        "title": "ConnectCode"
+      },
+      "ConnectRequestCreated": {
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "title": "Requestid"
+          },
+          "studentId": {
+            "type": "string",
+            "title": "Studentid"
+          },
+          "remark": {
+            "type": "string",
+            "title": "Remark"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requestId",
+          "studentId",
+          "remark"
+        ],
+        "title": "ConnectRequestCreated"
+      },
+      "CreateConnectRequest": {
+        "properties": {
+          "connectCode": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Connectcode"
+          },
+          "remark": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Remark"
+          }
+        },
+        "type": "object",
+        "required": [
+          "connectCode",
+          "remark"
+        ],
+        "title": "CreateConnectRequest"
+      },
+      "CreateConnection": {
+        "properties": {
+          "teacherId": {
+            "type": "string",
+            "title": "Teacherid"
+          },
+          "studentId": {
+            "type": "string",
+            "title": "Studentid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "teacherId",
+          "studentId"
+        ],
+        "title": "CreateConnection"
+      },
+      "CreateRegisterCodes": {
+        "properties": {
+          "count": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "count"
+        ],
+        "title": "CreateRegisterCodes"
+      },
+      "CreateStudent": {
+        "properties": {
+          "key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          },
+          "defaultRemark": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Defaultremark"
+          }
+        },
+        "type": "object",
+        "required": [
+          "defaultRemark"
+        ],
+        "title": "CreateStudent"
+      },
+      "CreateTeacher": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Username"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "name"
+        ],
+        "title": "CreateTeacher"
+      },
+      "CreatedStudent": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "defaultRemark": {
+            "type": "string",
+            "title": "Defaultremark"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "defaultRemark"
+        ],
+        "title": "CreatedStudent"
+      },
+      "CreatedTeacher": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "password"
+        ],
+        "title": "CreatedTeacher"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Me": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "Me"
+      },
+      "NewPassword": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "newPassword": {
+            "type": "string",
+            "title": "Newpassword"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "newPassword"
+        ],
+        "title": "NewPassword"
+      },
+      "Page_AdminMessageOut_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/AdminMessageOut"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "take": {
+            "type": "integer",
+            "title": "Take"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "total",
+          "skip",
+          "take"
+        ],
+        "title": "Page[AdminMessageOut]"
+      },
+      "Page_RegisterCodeOut_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/RegisterCodeOut"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "take": {
+            "type": "integer",
+            "title": "Take"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "total",
+          "skip",
+          "take"
+        ],
+        "title": "Page[RegisterCodeOut]"
+      },
+      "Page_RosterStudent_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/RosterStudent"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "take": {
+            "type": "integer",
+            "title": "Take"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "total",
+          "skip",
+          "take"
+        ],
+        "title": "Page[RosterStudent]"
+      },
+      "Page_StudentMessageOut_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/StudentMessageOut"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "take": {
+            "type": "integer",
+            "title": "Take"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "total",
+          "skip",
+          "take"
+        ],
+        "title": "Page[StudentMessageOut]"
+      },
+      "Page_StudentOut_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/StudentOut"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "take": {
+            "type": "integer",
+            "title": "Take"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "total",
+          "skip",
+          "take"
+        ],
+        "title": "Page[StudentOut]"
+      },
+      "Page_TeacherBrief_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/TeacherBrief"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "take": {
+            "type": "integer",
+            "title": "Take"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "total",
+          "skip",
+          "take"
+        ],
+        "title": "Page[TeacherBrief]"
+      },
+      "Page_TeacherMessageOut_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/TeacherMessageOut"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "take": {
+            "type": "integer",
+            "title": "Take"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "total",
+          "skip",
+          "take"
+        ],
+        "title": "Page[TeacherMessageOut]"
+      },
+      "Page_TeacherOut_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/TeacherOut"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "take": {
+            "type": "integer",
+            "title": "Take"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "total",
+          "skip",
+          "take"
+        ],
+        "title": "Page[TeacherOut]"
+      },
+      "RegisterCodeOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "code"
+        ],
+        "title": "RegisterCodeOut"
+      },
+      "RosterStudent": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "remark": {
+            "type": "string",
+            "title": "Remark"
+          },
+          "online": {
+            "type": "boolean",
+            "title": "Online"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "remark",
+          "online"
+        ],
+        "title": "RosterStudent"
+      },
+      "SendMessage": {
+        "properties": {
+          "studentIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Studentids"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Message"
+          },
+          "tts": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Tts"
+          },
+          "closeDelay": {
+            "type": "integer",
+            "maximum": 86400.0,
+            "minimum": 0.0,
+            "title": "Closedelay"
+          }
+        },
+        "type": "object",
+        "required": [
+          "studentIds",
+          "message",
+          "tts",
+          "closeDelay"
+        ],
+        "title": "SendMessage"
+      },
+      "SentMessage": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "studentIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Studentids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "createdAt",
+          "message",
+          "studentIds"
+        ],
+        "title": "SentMessage"
+      },
+      "SetBan": {
+        "properties": {
+          "ban": {
+            "type": "boolean",
+            "title": "Ban"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ban"
+        ],
+        "title": "SetBan"
+      },
+      "StudentBrief": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "defaultRemark": {
+            "type": "string",
+            "title": "Defaultremark"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "defaultRemark"
+        ],
+        "title": "StudentBrief"
+      },
+      "StudentLogin": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key"
+        ],
+        "title": "StudentLogin"
+      },
+      "StudentMe": {
+        "properties": {
+          "defaultRemark": {
+            "type": "string",
+            "title": "Defaultremark"
+          }
+        },
+        "type": "object",
+        "required": [
+          "defaultRemark"
+        ],
+        "title": "StudentMe"
+      },
+      "StudentMessageOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "teacherName": {
+            "type": "string",
+            "title": "Teachername"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "createdAt",
+          "message",
+          "teacherName"
+        ],
+        "title": "StudentMessageOut"
+      },
+      "StudentOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "defaultRemark": {
+            "type": "string",
+            "title": "Defaultremark"
+          },
+          "teachers": {
+            "items": {
+              "$ref": "#/components/schemas/TeacherBrief"
+            },
+            "type": "array",
+            "title": "Teachers"
+          },
+          "ban": {
+            "type": "boolean",
+            "title": "Ban"
+          },
+          "online": {
+            "type": "boolean",
+            "title": "Online"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "defaultRemark",
+          "teachers",
+          "ban",
+          "online"
+        ],
+        "title": "StudentOut"
+      },
+      "TeacherBrief": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "TeacherBrief"
+      },
+      "TeacherLogin": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "TeacherLogin"
+      },
+      "TeacherMessageOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "studentIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Studentids"
+          },
+          "showingIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Showingids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "createdAt",
+          "message",
+          "studentIds",
+          "showingIds"
+        ],
+        "title": "TeacherMessageOut"
+      },
+      "TeacherOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "students": {
+            "items": {
+              "$ref": "#/components/schemas/StudentBrief"
+            },
+            "type": "array",
+            "title": "Students"
+          },
+          "ban": {
+            "type": "boolean",
+            "title": "Ban"
+          },
+          "online": {
+            "type": "boolean",
+            "title": "Online"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "username",
+          "name",
+          "students",
+          "ban",
+          "online"
+        ],
+        "title": "TeacherOut"
+      },
+      "TeacherRegister": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Password"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          },
+          "registerCode": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 32,
+            "title": "Registercode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password",
+          "name",
+          "registerCode"
+        ],
+        "title": "TeacherRegister"
+      },
+      "Token": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "token"
+        ],
+        "title": "Token"
+      },
+      "UpdateMe": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "UpdateMe"
+      },
+      "UpdateRemark": {
+        "properties": {
+          "remark": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Remark"
+          }
+        },
+        "type": "object",
+        "required": [
+          "remark"
+        ],
+        "title": "UpdateRemark"
+      },
+      "UpdateStudent": {
+        "properties": {
+          "key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          },
+          "defaultRemark": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Defaultremark"
+          }
+        },
+        "type": "object",
+        "title": "UpdateStudent"
+      },
+      "UpdateTeacher": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "UpdateTeacher"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ConnectRequested": {
+        "properties": {
+          "event": {
+            "const": "connect-requested",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ConnectRequestedPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "ConnectRequested",
+        "type": "object"
+      },
+      "ConnectRequestedPayload": {
+        "properties": {
+          "requestId": {
+            "title": "Requestid",
+            "type": "string"
+          },
+          "teacherName": {
+            "title": "Teachername",
+            "type": "string"
+          }
+        },
+        "required": [
+          "requestId",
+          "teacherName"
+        ],
+        "title": "ConnectRequestedPayload",
+        "type": "object"
+      },
+      "Message": {
+        "properties": {
+          "event": {
+            "const": "message",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/MessagePayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "Message",
+        "type": "object"
+      },
+      "MessageClosedToStudent": {
+        "properties": {
+          "event": {
+            "const": "message-closed",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/MessageClosedToStudentPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "MessageClosedToStudent",
+        "type": "object"
+      },
+      "MessageClosedToStudentPayload": {
+        "properties": {
+          "messageId": {
+            "title": "Messageid",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "messageId"
+        ],
+        "title": "MessageClosedToStudentPayload",
+        "type": "object"
+      },
+      "MessagePayload": {
+        "properties": {
+          "messageId": {
+            "title": "Messageid",
+            "type": "integer"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "teacherName": {
+            "title": "Teachername",
+            "type": "string"
+          },
+          "tts": {
+            "title": "Tts",
+            "type": "integer"
+          },
+          "closeDelay": {
+            "title": "Closedelay",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "messageId",
+          "createdAt",
+          "message",
+          "teacherName",
+          "tts",
+          "closeDelay"
+        ],
+        "title": "MessagePayload",
+        "type": "object"
+      },
+      "TeacherConnected": {
+        "properties": {
+          "event": {
+            "const": "teacher-connected",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/TeacherConnectedPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "TeacherConnected",
+        "type": "object"
+      },
+      "TeacherConnectedPayload": {
+        "properties": {
+          "teacherId": {
+            "title": "Teacherid",
+            "type": "string"
+          },
+          "teacherName": {
+            "title": "Teachername",
+            "type": "string"
+          }
+        },
+        "required": [
+          "teacherId",
+          "teacherName"
+        ],
+        "title": "TeacherConnectedPayload",
+        "type": "object"
+      },
+      "TeacherDisconnected": {
+        "properties": {
+          "event": {
+            "const": "teacher-disconnected",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/TeacherDisconnectedPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "TeacherDisconnected",
+        "type": "object"
+      },
+      "TeacherDisconnectedPayload": {
+        "properties": {
+          "teacherId": {
+            "title": "Teacherid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "teacherId"
+        ],
+        "title": "TeacherDisconnectedPayload",
+        "type": "object"
+      },
+      "TeacherNameChanged": {
+        "properties": {
+          "event": {
+            "const": "teacher-name-changed",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/TeacherNameChangedPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "TeacherNameChanged",
+        "type": "object"
+      },
+      "TeacherNameChangedPayload": {
+        "properties": {
+          "teacherId": {
+            "title": "Teacherid",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "teacherId",
+          "name"
+        ],
+        "title": "TeacherNameChangedPayload",
+        "type": "object"
+      },
+      "WsStudentEvent": {
+        "discriminator": {
+          "mapping": {
+            "connect-requested": "#/components/schemas/ConnectRequested",
+            "message": "#/components/schemas/Message",
+            "message-closed": "#/components/schemas/MessageClosedToStudent",
+            "teacher-connected": "#/components/schemas/TeacherConnected",
+            "teacher-disconnected": "#/components/schemas/TeacherDisconnected",
+            "teacher-name-changed": "#/components/schemas/TeacherNameChanged"
+          },
+          "propertyName": "event"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ConnectRequested"
+          },
+          {
+            "$ref": "#/components/schemas/Message"
+          },
+          {
+            "$ref": "#/components/schemas/MessageClosedToStudent"
+          },
+          {
+            "$ref": "#/components/schemas/TeacherConnected"
+          },
+          {
+            "$ref": "#/components/schemas/TeacherDisconnected"
+          },
+          {
+            "$ref": "#/components/schemas/TeacherNameChanged"
+          }
+        ]
+      },
+      "ConnectRequestAccepted": {
+        "properties": {
+          "event": {
+            "const": "connect-request-accepted",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RequestIdPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "ConnectRequestAccepted",
+        "type": "object"
+      },
+      "ConnectRequestRejected": {
+        "properties": {
+          "event": {
+            "const": "connect-request-rejected",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RequestIdPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "ConnectRequestRejected",
+        "type": "object"
+      },
+      "MessageClosedToTeacher": {
+        "properties": {
+          "event": {
+            "const": "message-closed",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/MessageClosedToTeacherPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "MessageClosedToTeacher",
+        "type": "object"
+      },
+      "MessageClosedToTeacherPayload": {
+        "properties": {
+          "messageId": {
+            "title": "Messageid",
+            "type": "integer"
+          },
+          "studentId": {
+            "title": "Studentid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "messageId",
+          "studentId"
+        ],
+        "title": "MessageClosedToTeacherPayload",
+        "type": "object"
+      },
+      "RequestIdPayload": {
+        "properties": {
+          "requestId": {
+            "title": "Requestid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "requestId"
+        ],
+        "title": "RequestIdPayload",
+        "type": "object"
+      },
+      "StudentConnected": {
+        "properties": {
+          "event": {
+            "const": "student-connected",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/StudentConnectedPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "StudentConnected",
+        "type": "object"
+      },
+      "StudentConnectedPayload": {
+        "properties": {
+          "studentId": {
+            "title": "Studentid",
+            "type": "string"
+          },
+          "remark": {
+            "title": "Remark",
+            "type": "string"
+          },
+          "online": {
+            "title": "Online",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "studentId",
+          "remark",
+          "online"
+        ],
+        "title": "StudentConnectedPayload",
+        "type": "object"
+      },
+      "StudentDisconnected": {
+        "properties": {
+          "event": {
+            "const": "student-disconnected",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/StudentIdPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "StudentDisconnected",
+        "type": "object"
+      },
+      "StudentIdPayload": {
+        "properties": {
+          "studentId": {
+            "title": "Studentid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "studentId"
+        ],
+        "title": "StudentIdPayload",
+        "type": "object"
+      },
+      "StudentOffline": {
+        "properties": {
+          "event": {
+            "const": "student-offline",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/StudentIdPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "StudentOffline",
+        "type": "object"
+      },
+      "StudentOnline": {
+        "properties": {
+          "event": {
+            "const": "student-online",
+            "title": "Event",
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/StudentIdPayload"
+          }
+        },
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "StudentOnline",
+        "type": "object"
+      },
+      "WsTeacherEvent": {
+        "discriminator": {
+          "mapping": {
+            "connect-request-accepted": "#/components/schemas/ConnectRequestAccepted",
+            "connect-request-rejected": "#/components/schemas/ConnectRequestRejected",
+            "message-closed": "#/components/schemas/MessageClosedToTeacher",
+            "student-connected": "#/components/schemas/StudentConnected",
+            "student-disconnected": "#/components/schemas/StudentDisconnected",
+            "student-offline": "#/components/schemas/StudentOffline",
+            "student-online": "#/components/schemas/StudentOnline"
+          },
+          "propertyName": "event"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ConnectRequestAccepted"
+          },
+          {
+            "$ref": "#/components/schemas/ConnectRequestRejected"
+          },
+          {
+            "$ref": "#/components/schemas/StudentOnline"
+          },
+          {
+            "$ref": "#/components/schemas/StudentOffline"
+          },
+          {
+            "$ref": "#/components/schemas/MessageClosedToTeacher"
+          },
+          {
+            "$ref": "#/components/schemas/StudentConnected"
+          },
+          {
+            "$ref": "#/components/schemas/StudentDisconnected"
+          }
+        ]
+      }
+    }
+  }
+}

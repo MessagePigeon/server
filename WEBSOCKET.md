@@ -24,6 +24,11 @@ Every server message is JSON:
 { "event": "EVENT_NAME", "data": { "SOME": "DATA" } }
 ```
 
+> These events are also part of `openapi.json` as the discriminated-union schemas
+> **`WsStudentEvent`** and **`WsTeacherEvent`** (source of truth:
+> `app/ws/events.py`), so frontend type generation covers them. The tables below
+> are the human-readable reference.
+
 ## Close codes
 
 | Code | Meaning |

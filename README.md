@@ -49,6 +49,26 @@ For the full dev + deploy guide, see the sections below.
 - **Mutations**: return `204 No Content` (creates return `201` with the new resource).
 - **WebSocket**: `ws://localhost:3000/v1/ws?token=<jwt>` — see [WEBSOCKET.md](WEBSOCKET.md).
 
+## API spec & frontend codegen
+
+`openapi.json` (OpenAPI 3.1) is committed at the repo root as the API contract.
+Regenerate it after changing any route or WebSocket event:
+
+```bash
+uv run python -m app.export_openapi   # writes openapi.json (no server/DB needed)
+```
+
+CI fails if the committed `openapi.json` is stale. WebSocket events are part of the
+same spec as the schemas **`WsStudentEvent`** and **`WsTeacherEvent`**
+(discriminated by `event`), so a single generator covers REST *and* WS payloads.
+
+Generate TypeScript types in your frontend from that file, e.g.:
+
+```bash
+npx openapi-typescript openapi.json -o src/api/schema.d.ts
+# WS payloads: components["schemas"]["WsStudentEvent"] / ["WsTeacherEvent"]
+```
+
 ## Project layout
 
 ```
