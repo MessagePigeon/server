@@ -1,15 +1,15 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
-from fastapi.encoders import jsonable_encoder
-from fastapi.exceptions import RequestValidationError
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 
+from app.api.v1.routers import admin, auth, config, student, teacher
+from app.core.errors import register_error_handlers
 from app.db import init_db
-from app.routers import admin, student, teacher
 from app.tasks import start_scheduler
 from app.ws import gateway
+
+V1 = "/v1"
 
 
 @asynccontextmanager
@@ -28,19 +28,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    # Match NestJS ValidationPipe: 400 Bad Request (FastAPI defaults to 422).
-    return JSONResponse(
-        status_code=400,
-        content=jsonable_encoder(
-            {"statusCode": 400, "message": exc.errors(), "error": "Bad Request"}
-        ),
-    )
+register_error_handlers(app)
 
 
-app.include_router(admin.router)
-app.include_router(teacher.router)
-app.include_router(student.router)
+@app.get("/health", tags=["ops"])
+async def health():
+    return {"status": "ok"}
+
+
+for r in (auth.router, admin.router, teacher.router, student.router, config.router):
+    app.include_router(r, prefix=V1)
+
+# WebSocket route already carries its own /v1/ws path.
 app.include_router(gateway.router)

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from nanoid import generate
 
@@ -9,7 +9,7 @@ def parse_iso(value: str) -> datetime:
     """Parse an ISO8601 string (accepts trailing 'Z') into an aware UTC datetime."""
     dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if dt.tzinfo is None:
-        dt = dt.replace(tzinfo=timezone.utc)
+        dt = dt.replace(tzinfo=UTC)
     return dt
 
 

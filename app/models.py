@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import DateTime
 from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
@@ -10,7 +10,7 @@ def _uuid() -> str:
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 _TZ = {"sa_type": DateTime(timezone=True)}
@@ -28,6 +28,7 @@ class Teacher(SQLModel, table=True):
     name: str
     password: str
     ban: bool = Field(default=False)
+    tokenVersion: int = Field(default=0)
 
 
 class Student(SQLModel, table=True):
@@ -36,6 +37,7 @@ class Student(SQLModel, table=True):
     key: str = Field(unique=True, index=True)
     defaultRemark: str
     ban: bool = Field(default=False)
+    tokenVersion: int = Field(default=0)
 
 
 class StudentRemark(SQLModel, table=True):

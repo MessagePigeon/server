@@ -1,55 +1,60 @@
 # WebSocket API
 
-## Convention
+## Connecting
 
-According to [nestjs](https://docs.nestjs.com/websockets/gateways), we obey **event-data** format and transfer by json
+Authenticate during the handshake by passing the JWT from `/v1/teacher/login` or
+`/v1/student/login` as a query parameter:
 
-```json
-{
-  "event": "EVENT NAME",
-  "data": { "SOME": "DATA" }
-}
+```
+ws://localhost:3000/v1/ws?token=<jwt>
 ```
 
-## Initialization
+The role (teacher or student) is derived from the token — there is no `online`
+message to send. If the token is missing, invalid, expired, the account is
+banned, or the token has been revoked, the server **closes the connection with
+code `1008`**.
 
-After login, send this to server
+There are no client → server messages; the server only pushes events.
+
+## Message format
+
+Every server message is JSON:
 
 ```json
-{
-  "event": "online",
-  "data": {
-    "token": "jwt token",
-    "role": "teacher (or student)"
-  }
-}
+{ "event": "EVENT_NAME", "data": { "SOME": "DATA" } }
 ```
+
+## Close codes
+
+| Code | Meaning |
+| ---- | ------- |
+| `1008` | Authentication failed (bad/expired/revoked token). |
+| `4001` | Replaced — the same account connected elsewhere (one connection per student). |
+| `4003` | Revoked — banned or force-logged-out by an admin. |
 
 ## Events
 
-> All events are sent by server
+> All events are sent by the server.
 
 ### Student
 
-| Event                    | Description                          | Data                                                                                           |
-| ------------------------ | ------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| logout                   | duplicate login or deleted by admin  | /                                                                                              |
-| connect-request          | teacher want to connect this student | `{ requestId: string, teacherName: string }`                                                   |
-| message                  | message sent by teacher              | `{ messageId: number, message: string, teacherName: string, tts: number, closeDelay: number }` |
-| teacher-disconnect       | disconnect by teacher (or admin)     | `{ teacherId: string }`                                                                        |
-| teacher-connect-by-admin | connect teacher by admin forcibly    | `{ teacherId: string, teacherName: string }`                                                   |
-| close-message            | close message by teacher             | `{ messageId: number }`                                                                        |
-| teacher-name-changed     | /                                    | `{ teacherId: string, newName: string }`                                                       |
+| Event | Description | Data |
+| ----- | ----------- | ---- |
+| `connect-requested` | A teacher wants to connect to this student | `{ requestId: string, teacherName: string }` |
+| `message` | Message from a teacher | `{ messageId: number, createdAt: string, message: string, teacherName: string, tts: number, closeDelay: number }` |
+| `message-closed` | A message was closed (by the teacher) | `{ messageId: number }` |
+| `teacher-connected` | An admin connected a teacher to this student | `{ teacherId: string, teacherName: string }` |
+| `teacher-disconnected` | A teacher (or admin) disconnected | `{ teacherId: string }` |
+| `teacher-name-changed` | A connected teacher renamed | `{ teacherId: string, name: string }` |
 
 ### Teacher
 
-| Event                       | Description                          | Data                                                     |
-| --------------------------- | ------------------------------------ | -------------------------------------------------------- |
-| reject-connect-request      | student reject connect               | `{ requestId: string }`                                  |
-| accept-connect-request      | student accept connect               | `{ requestId: string }`                                  |
-| student-online              | /                                    | `{ studentId: string }`                                  |
-| student-offline             | /                                    | `{ studentId: string }`                                  |
-| message-close               | close the message                    | `{ messageId: number, studentId: string }`               |
-| student-connect-by-admin    | connect student by admin forcibly    | `{ studentId: string, remark: string, online: boolean }` |
-| student-disconnect-by-admin | disconnect student by admin forcibly | `{ studentId: string }`                                  |
-| logout                      | deleted by admin                     | /                                                        |
+| Event | Description | Data |
+| ----- | ----------- | ---- |
+| `connect-request-accepted` | Student accepted a connect request | `{ requestId: string }` |
+| `connect-request-rejected` | Student rejected a connect request | `{ requestId: string }` |
+| `student-online` | A connected student came online | `{ studentId: string }` |
+| `student-offline` | A connected student went offline | `{ studentId: string }` |
+| `message-closed` | A student closed a message | `{ messageId: number, studentId: string }` |
+| `student-connected` | An admin connected a student to this teacher | `{ studentId: string, remark: string, online: boolean }` |
+| `student-disconnected` | An admin disconnected a student | `{ studentId: string }` |

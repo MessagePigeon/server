@@ -32,3 +32,6 @@ logs
 # Env Files
 .env
 *.env
+
+# test artifacts
+test.db

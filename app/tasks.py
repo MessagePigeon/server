@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -10,7 +10,7 @@ scheduler = AsyncIOScheduler()
 
 
 def _age_gte(created_at: datetime, delta: timedelta) -> bool:
-    return datetime.now(timezone.utc) - created_at >= delta
+    return datetime.now(UTC) - created_at >= delta
 
 
 def cleanup_states() -> None:
@@ -27,6 +27,7 @@ def cleanup_states() -> None:
 
 
 def start_scheduler() -> None:
-    scheduler.add_job(cleanup_states, "cron", hour=0, minute=0, id="cleanup-states")
+    # Run hourly so expired connect-requests/messages don't linger far past their TTL.
+    scheduler.add_job(cleanup_states, "cron", minute=0, id="cleanup-states")
     scheduler.start()
-    logger.info("Scheduler started: daily state cleanup at midnight")
+    logger.info("Scheduler started: hourly state cleanup")

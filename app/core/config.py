@@ -11,5 +11,8 @@ class Settings(BaseSettings):
     ADMIN_PASSWORD: str
     TEACHER_URL: str
 
+    # Bump to instantly revoke all existing admin tokens.
+    ADMIN_TOKEN_VERSION: int = 1
+
 
 settings = Settings()

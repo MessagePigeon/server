@@ -1,14 +1,18 @@
 import re
-from datetime import datetime, timedelta, timezone
+import secrets
+from datetime import UTC, datetime, timedelta
+from typing import Literal
 
 import jwt
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 
-from app.config import settings
+from app.core.config import settings
 
 _ph = PasswordHasher()
 _ALGO = "HS256"
+
+Role = Literal["admin", "teacher", "student"]
 
 # vercel/ms-style units -> seconds
 _UNITS = {
@@ -23,7 +27,6 @@ _UNITS = {
 
 
 def parse_duration(value: str) -> timedelta:
-    """Parse an ms-style duration like '1 weeks', '7d', '3h' into a timedelta."""
     match = re.fullmatch(r"\s*(\d+(?:\.\d+)?)\s*([a-zA-Z]+)\s*", value)
     if not match:
         raise ValueError(f"Invalid duration: {value!r}")
@@ -33,6 +36,7 @@ def parse_duration(value: str) -> timedelta:
     return timedelta(seconds=float(amount) * _UNITS[unit])
 
 
+# ---- passwords ----
 def hash_password(password: str) -> str:
     return _ph.hash(password)
 
@@ -40,24 +44,27 @@ def hash_password(password: str) -> str:
 def verify_password(hashed: str, password: str) -> bool:
     try:
         return _ph.verify(hashed, password)
-    except VerifyMismatchError:
-        return False
-    except Exception:
+    except (VerifyMismatchError, Exception):
         return False
 
 
+def constant_time_equals(a: str, b: str) -> bool:
+    return secrets.compare_digest(a, b)
+
+
+# ---- jwt ----
 def _encode(payload: dict) -> str:
-    exp = datetime.now(timezone.utc) + parse_duration(settings.JWT_EXPIRES_IN)
+    exp = datetime.now(UTC) + parse_duration(settings.JWT_EXPIRES_IN)
     return jwt.encode({**payload, "exp": exp}, settings.JWT_SECRET, algorithm=_ALGO)
 
 
-def sign_jwt_with_id(user_id: str) -> dict:
-    return {"token": _encode({"id": user_id})}
+def sign_user_token(role: Role, user_id: str, token_version: int) -> str:
+    return _encode({"role": role, "id": user_id, "ver": token_version})
 
 
-def sign_admin_jwt() -> dict:
-    return {"token": _encode({"message": "pigeon"})}
+def sign_admin_token() -> str:
+    return _encode({"role": "admin", "ver": settings.ADMIN_TOKEN_VERSION})
 
 
-def verify_jwt(token: str) -> dict:
+def decode_token(token: str) -> dict:
     return jwt.decode(token, settings.JWT_SECRET, algorithms=[_ALGO])
