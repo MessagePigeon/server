@@ -1,8 +1,8 @@
 # Message Pigeon Server
 
-> The backend of Message Pigeon
+> The backend of Message Pigeon — Python / FastAPI
 
-## Docker (recommended)
+## Production (Docker)
 
 Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
@@ -18,7 +18,10 @@ Subsequent starts:
 docker compose up
 ```
 
-The app runs at `http://localhost:3000`. The database is persisted in a named Docker volume and the schema is synced automatically on each start.
+The app runs at `http://localhost:3000`. PostgreSQL is persisted in a named Docker
+volume, and the schema is created automatically on startup. `docker-compose.yml`
+overrides `DATABASE_URL` to point at the `postgres` service, so `.env` can keep its
+local-dev value.
 
 To stop:
 
@@ -26,42 +29,35 @@ To stop:
 docker compose down
 ```
 
-## Manual setup
+> The app runs as a **single process** — its WebSocket state is held in memory and
+> must not be split across workers.
 
-### Preparation
+## Local development (uv, no Docker)
 
-1. PostgreSQL
-2. Rename `.env.template` to `.env` and configure it
-
-### Installation
+Requires [uv](https://docs.astral.sh/uv/) and a PostgreSQL instance.
 
 ```bash
-# install dependencies
-pnpm install
+# 1. install dependencies (creates .venv)
+uv sync
 
-# init database
-pnpm run db:push
+# 2. set up env (defaults point at localhost:5433)
+cp .env.template .env
+
+# 3. start just the database (exposed on host port 5433)
+docker compose up -d postgres
+
+# 4. run the app with autoreload
+uv run uvicorn app.main:app --reload --port 3000
 ```
 
-### Running the app
-
-```bash
-# development
-pnpm run start
-
-# watch mode
-pnpm run start:dev
-
-# production mode
-pnpm run start:prod
-```
+Tables are created on startup; no migration step is needed.
 
 ## Usage
 
 ### HTTP API
 
-After run the app, open `/api-docs` in the browser
+Open `/api-docs` in the browser for the Swagger UI (OpenAPI JSON at `/openapi.json`).
 
 ### WebSocket API
 
-See [WebSocket API Docs](WEBSOCKET.md)
+See [WebSocket API Docs](WEBSOCKET.md). Connect to `ws://localhost:3000/`.

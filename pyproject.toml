@@ -1,0 +1,21 @@
+[project]
+name = "mpigeon-server"
+version = "0.3.0"
+description = "Message Pigeon Backend (FastAPI)"
+authors = [{ name = "jsun969" }]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "sqlmodel>=0.0.22",
+    "greenlet>=3.1",
+    "asyncpg>=0.30",
+    "pydantic-settings>=2.6",
+    "pyjwt>=2.10",
+    "argon2-cffi>=23.1",
+    "nanoid>=2.0",
+    "apscheduler>=3.11",
+]
+
+[tool.uv]
+package = false
